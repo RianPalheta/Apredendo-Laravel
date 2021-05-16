@@ -22,8 +22,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::prefix('painel')->group(function() {
     Route::get('users/get', [AdminUserApiController::class, 'get_users'])->name('getUsers');
-    Route::put('users/update', [AdminUserApiController::class, 'update'])->name('users.update');
-    Route::put('users/destroy', [AdminUserApiController::class, 'destroy'])->name('users.destroy');
+    Route::put('users/update/{id}', [AdminUserApiController::class, 'update'])->name('users.update');
+    Route::delete('users/destroy/{id}', [AdminUserApiController::class, 'destroy'])->name('users.destroy');
 });
 
 Route::get('cep', [CorreiosController::class, 'cep'])->name('cep');
