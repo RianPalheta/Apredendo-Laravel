@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -42,6 +41,7 @@ class LoginController extends Controller
     public function index() {
         return view('admin.login');
     }
+
     public function authenticate(Request $request) {
         $data = $request->only([
             'email',
@@ -60,6 +60,7 @@ class LoginController extends Controller
 
         if(Auth::attempt($data, $remember)) {
             $login['success'] = true;
+            $login['message'] = '';
             echo json_encode($login);
             return;
         } else {

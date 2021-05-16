@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CorreiosController;
+use App\Http\Controllers\Admin\UserApiController as AdminUserApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +21,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::prefix('painel')->group(function() {
-    Route::get('users/get', [AdminUserController::class, 'getUsers'])->name('getUsers');
+    Route::get('users/get', [AdminUserApiController::class, 'get_users'])->name('getUsers');
+    Route::put('users/update', [AdminUserApiController::class, 'update'])->name('users.update');
+    Route::put('users/destroy', [AdminUserApiController::class, 'destroy'])->name('users.destroy');
 });
 
 Route::get('cep', [CorreiosController::class, 'cep'])->name('cep');

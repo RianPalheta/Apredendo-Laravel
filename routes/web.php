@@ -32,5 +32,6 @@ Route::prefix('painel')->group(function() {
     Route::get('register', [AdminRegisterController::class, 'index'])->name('register');
     Route::post('register', [AdminRegisterController::class, 'register'])->name('auth.register');
 
-    Route::resource('users', AdminUserController::class);
+    Route::get('users', [AdminUserController::class, 'index']);
+    Route::get('users/{id}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
 });

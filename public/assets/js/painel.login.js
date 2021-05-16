@@ -1,6 +1,6 @@
 $(function() {
     $('form').submit(function(e) {
-        e.preventDefault()
+        e.preventDefault();
 
         $.ajax({
             headers: {
@@ -12,15 +12,15 @@ $(function() {
             dataType:'JSON',
             success:function(response) {
                 if(response.success === false) {
-                    let input = new Array(response.message)
+                    let input = new Array(response.message);
                     input.map((item, key) => {
-                        $(`input`).removeClass('is-invalid')
-                        $(`input[name=${Object.keys(item)[key]}]`).addClass('is-invalid')
+                        $(`input`).removeClass('is-invalid');
+                        $(`input[name=${Object.keys(item)[key]}]`).addClass('is-invalid');
                     })
                 } else {
-                    window.location.href = painel
+                    window.location.href = painel;
                 }
             }
-        })
-    })
-})
+        });
+    });
+});
