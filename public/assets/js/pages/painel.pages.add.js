@@ -79,72 +79,46 @@ function doneTyping() {
 }
 
 $(function() {
-    $('#user-edit').submit(function(e){
+    $('#user-add').submit(function(e){
         e.preventDefault();
+        let form = document.getElementById('user-add');
+        let formData = new FormData(form);
 
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            type: "PUT",
-            url: url_update,
-            data: $(this).serialize(),
+            type: "POST",
+            url: url_add,
+            data: formData,
+            processData: false,
+		    contentType: false,
             success: function (response) {
                 r = JSON.parse(response);
                 if(r.success === true) {
-                    toastr["success"]("Usuário editado com sucesso!", "Sucesso")
+                    toastr["success"]("Usuário cadastrado com sucesso!", "Sucesso")
+                    setTimeout(() => {
+                        window.location.href = url_users;
+                    }, 1000 );
                 } else {
                     let msg = new Array(r.message);
-                    msg.map((item, key) => {
+                    msg.forEach((item, key) => {
                         $(`input`).removeClass('is-invalid');
                         $(`input[name=${Object.keys(item)[key]}]`).addClass('is-invalid');
                         toastr["error"](Object.values(item)[key], "Error");
                     });
                 }
+                return;
             }
         });
     })
+    $("input[type=file]").on("change", function(){
+        let img = document.querySelector("#avatar_new_user").files[0];
+        let src = URL.createObjectURL(img);
+        $('.new_avatar_label').html(img.name);
+        $('.new_avatar_view').html(`<img src="${src}" class="img-fluid" style="max-height:350px" />`);
+    });
 })
-
-Dropzone.autoDiscover = false;
-$('#photo_user').dropzone({
-    paramName: 'avatar',
-    url: url_update,
-    maxFilesize: 1,
-    maxFiles: 1,
-    uploadMultiple: false,
-    filesizeBase: 2048,
-    addRemoveLinks: true,
-    acceptedFiles: '.jpeg,.jpg,.png,.gif,.icon,.webp',
-
-    dictFallbackMessage: 'Seu navegador não é compatível com essa funcionalidade.',
-    dictFileTooBig: 'Essa imagem ultrapassou o limite de 2mb.',
-    dictInvalidFileType: 'Esse arquivo não é suportado.',
-    dictResponseError: 'Ops! Algo deu errado no servidor.',
-
-    init: function() {
-        this.on('success', function(file, res) {
-            let r = JSON.parse(res);
-            if(r.success != true) {
-                let r_array = new Array(r.message);
-                r_array.map((item, key) => {
-                    let msg = Object.values(item);
-                    toastr["error"](msg, "Error");
-                })
-            } else {
-                toastr["success"]("Avatar trocado!", "Sucesso");
-                $('.profile-user-img').attr('src', `${assets}/${r.avatar}`);
-            }
-        });
-        this.on('error', function(file, errorMessage) {
-            toastr["error"](errorMessage, "Error")
-        });
-        this.on('complete', function(file) {
-            this.removeFile(file);
-        });
-    }
-});
-
 
 toastr.options = {
     "closeButton": true,

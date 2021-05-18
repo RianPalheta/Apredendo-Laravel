@@ -1,23 +1,22 @@
 @extends('adminlte::page')
 
-@section('title', 'Usuários')
+@section('title', 'Páginas')
 
 @section('content_header')
     <div class="d-flex justify-content-between">
-        <h1>Usuários <span></span></h1>
-        <a href="{{ route('users.create') }}" class="btn btn-success"><i class="fas fa-user-plus"></i></a>
+        <h1>Páginas <span></span></h1>
+        <a href="{{ route('pages.create') }}" class="btn btn-success"><i class="fas fa-user-plus"></i></a>
     </div>
 @stop
 
 @section('js')
     <script>
-        const logged = {{ $logged }};
-        const url = "{{ route('getUsers') }}";
-        const url_edit = "{{ route('users.edit', [1]) }}";
-        const url_del = "{{ route('users.destroy', [1]) }}";
+        const url = "{{ route('getPages') }}";
+        const url_edit = "{{ route('pages.edit', [1]) }}";
+        const url_del = "{{ route('pages.destroy', [1]) }}";
     </script>
     <script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/users/painel.users.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/painel.pages.js') }}"></script>
 @endsection
 
 @section('content')
@@ -67,8 +66,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nome</th>
-                        <th>E-mail</th>
+                        <th>Título</th>
                         <th>Ações</th>
                     </tr>
                 </thead>

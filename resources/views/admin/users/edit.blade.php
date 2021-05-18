@@ -21,7 +21,7 @@
     <script src="{{ asset('assets/js/plugins/toastr.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/dropzone.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/imask.js') }}"></script>
-    <script src="{{ asset('assets/js/painel.users.edit.js') }}"></script>
+    <script src="{{ asset('assets/js/users/painel.users.edit.js') }}"></script>
 @endsection
 
 @section('content')

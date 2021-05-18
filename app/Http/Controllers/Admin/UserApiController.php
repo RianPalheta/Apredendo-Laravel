@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UserApiController extends Controller
 {
+
     public function get_users(Request $request) {
         $search['content'] = $request->input('search');
         switch($search['content']) {
@@ -42,15 +43,114 @@ class UserApiController extends Controller
         //
     }
 
-    public function create_user(Request $request, $id)
+    public function create_user(Request $request)
     {
-        //
+        $inputs = $request->only([
+            'name',
+            'email',
+            'telephone',
+            'birthday',
+            'uf',
+            'cep',
+            'cpf',
+            'city',
+            'district',
+            'password',
+            'complement',
+            'number_home',
+            'password_confirmation'
+
+        ]);
+
+        foreach($inputs as $key => $v) {
+            !empty($inputs[$key]) ? $data[$key] = $v : '';
+        }
+
+        if( $request->hasFile('avatar') &&
+            $request->file('avatar')->isValid()) {
+            $data['avatar'] = $request->file('avatar');
+        }
+        if(!empty($data['birthday'])) {
+            $d = explode('/', $request->input('birthday'));
+            if(count($d) == 3) {
+                $date = $d[2].'-'.$d[1].'-'.$d[0];
+                if(strtotime($date) >= strtotime(date('Y-m-d'))) {
+                    $create['success'] = false;
+                    $create['message'] = [
+                        'birthday' => ['Data de nascimento inválida.']
+                    ];
+                    echo json_encode($create);
+                    return;
+                } else {
+                    $data['birthday'] = $date;
+                }
+            }
+        }
+
+        $validator = $this->validator($data, true);
+        if($validator->fails()) {
+            $create['success'] = false;
+            $create['message'] = $validator->errors();
+        } else {
+            $create['success'] = true;
+            $create['message'] = '';
+
+            if(!empty($data['avatar'])) {
+                $data['avatar'] = $this->avatar_user(
+                    $request
+                    ->file('avatar')
+                    ->path(),
+                    'webp',
+                    100
+                );
+            }
+
+            !empty($data['password'])
+                ? $data['password'] = Hash::make($data['password'])
+                : '';
+
+            unset($data['password_confirmation']);
+
+            $user = new User;
+            foreach($data as $key => $value) {
+                $user->$key = $value;
+            }
+            $user->save();
+        }
+
+        echo json_encode($create);
+        return;
     }
 
     public function update(Request $request, $id)
     {
-        $data = [];
         $user = User::find($id);
+        if(!$user) {
+            $update['success'] = false;
+            $update['message'] = [
+                'not_allowed' => 'Você não tem permissão para realizar essa tarefa.'
+            ];
+        }
+
+        $inputs = $request->only([
+            'name',
+            'telephone',
+            'birthday',
+            'uf',
+            'cep',
+            'cpf',
+            'city',
+            'district',
+            'password',
+            'complement',
+            'number_home',
+            'password_confirmation'
+
+        ]);
+
+        foreach($inputs as $key => $v) {
+            !empty($inputs[$key]) ? $data[$key] = $v : '';
+        }
 
         if( $request->hasFile('avatar') &&
             $request->file('avatar')->isValid()) {
@@ -83,19 +183,6 @@ class UserApiController extends Controller
             }
         }
 
-        !empty($request->input('uf'))                       ? $data['uf'] = $request->input('uf') : '';
-        !empty($request->input('cep'))                      ? $data['cep'] = $request->input('cep') : '';
-        !empty($request->input('cpf'))                      ? $data['cpf'] = $request->input('cpf') : '';
-        !empty($request->input('city'))                     ? $data['city'] = $request->input('city') : '';
-        !empty($request->input('road'))                     ? $data['road'] = $request->input('road') : '';
-        !empty($request->input('name'))                     ? $data['name'] = $request->input('name') : '';
-        !empty($request->input('password'))                 ? $data['password'] = $request->input('password') : '';
-        !empty($request->input('district'))                 ? $data['district'] = $request->input('district') : '';
-        !empty($request->input('telephone'))                ? $data['telephone'] = $request->input('telephone') : '';
-        !empty($request->input('complement'))               ? $data['complement'] = $request->input('complement') : '';
-        !empty($request->input('number_home'))              ? $data['number_home'] = $request->input('number_home') : '';
-        !empty($request->input('password_confirmation'))    ? $data['password_confirmation'] = $request->input('password_confirmation') : '';
-
         $validator = $this->validator($data);
         if($validator->fails()) {
             $update['success'] = false;
@@ -121,9 +208,9 @@ class UserApiController extends Controller
             unset($data['password_confirmation']);
 
             foreach($data as $key => $value) {
-                $user->$key = $data[$key];
-                $user->save();
+                $user->$key = $value;
             }
+            $user->save();
         }
 
         echo json_encode($update);
@@ -136,11 +223,13 @@ class UserApiController extends Controller
 
         if($loggedId !== intval($id)) {
             $user = User::find($id);
-            @unlink(
-                public_path('media')
-                .'/users/'
-                .$user->avatar
-            );
+            if($user->avatar != 'default.png') {
+                @unlink(
+                    public_path('media')
+                    .'/users/'
+                    .$user->avatar
+                );
+            }
             $user->delete();
             $delete['success'] = true;
         } else {
@@ -152,21 +241,22 @@ class UserApiController extends Controller
         return;
     }
 
-    protected function validator(array $data)
+    protected function validator(array $data, $req = false)
     {
         return Validator::make($data, [
             'uf'            => 'min:2',
-            'cpf'           => 'cpf_cnpj',
-            'cep'           => 'min:8|max:10',
-            'telephone'     => 'string|max:16',
+            'cep'           => 'string|min:8|max:10',
             'complement'    => 'string|max:100',
-            'name'          => 'string|max:100',
             'city'          => 'string|max:100',
             'district'      => 'string|max:100',
             'number_home'   => 'string|max:100',
-            'avatar'        => 'image|max:2024000',
-            'password'      => 'string|min:4|max:100|confirmed',
-            'email'         => 'string|email|max:100|unique:users',
+            'avatar'        => 'image|max:5243',
+            $req ? "'birthday' => 'required'" : '',
+            'cpf'           => $req ? 'required|cpf_cnpj' : 'cpf_cnpj',
+            'telephone'     => $req ? 'required|string|max:16' : 'string|max:16',
+            'name'          => $req ? 'required|string|max:100' : 'string|max:100',
+            'password'      => $req ? 'required|string|min:4|max:100|confirmed' : 'string|min:4|max:100|confirmed',
+            'email'         => $req ? 'required|string|email|max:100|unique:users' : 'string|email|max:100|unique:users',
         ]);
     }
 

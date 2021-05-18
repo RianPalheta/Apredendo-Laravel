@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterController;
+use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,11 @@ Route::prefix('painel')->group(function() {
     Route::get('register', [AdminRegisterController::class, 'index'])->name('register');
     Route::post('register', [AdminRegisterController::class, 'register'])->name('auth.register');
 
-    Route::get('users', [AdminUserController::class, 'index']);
+    Route::get('users', [AdminUserController::class, 'index'])->name('users.list');
+    Route::get('users/add', [AdminUserController::class, 'create'])->name('users.create');
     Route::get('users/{id}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
+
+    Route::get('pages', [AdminPageController::class, 'index'])->name('pages.list');
+    Route::get('pages/add', [AdminPageController::class, 'create'])->name('pages.create');
+    Route::get('pages/{id}/edit', [AdminPageController::class, 'edit'])->name('pages.edit');
 });
