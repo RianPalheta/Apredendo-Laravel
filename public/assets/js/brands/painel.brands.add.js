@@ -1,20 +1,7 @@
-tinymce.init({
-    selector:'textarea.body-field',
-    height:300,
-    menubar:true,
-    plugins:['link', 'table', 'image', 'autoresize', 'lists', 'advlist', 'anchor', 'charmap', 'autosave', 'codesample', 'code', 'directionality', 'emoticons', 'insertdatetime', 'searchreplace', 'wordcount', 'media'],
-    toolbar:'undo redo | formatselect | bold italic underline  backcolor | alignleft aligncenter alignright alignjustify ltr rtl | link image imagetools emoticons | bullist numlist arrowlist | lists advlist | codesample code',
-    autosave_ask_before_unload: true,
-    insertdatetime_formats: ['%H:%M:%S', '%Y-%m-%d', '%I:%M:%S %p', '%D'],
-    images_upload_url,
-    images_upload_credentials:true,
-    convert_urls:false
-})
-
 $(function() {
-    $('#page-add').submit(function(e){
+    $('#brand-add').submit(function(e){
         e.preventDefault();
-        let form = document.getElementById('page-add');
+        let form = document.getElementById('brand-add');
         let formData = new FormData(form);
 
         $.ajax({
@@ -29,9 +16,9 @@ $(function() {
             success: function (response) {
                 r = JSON.parse(response);
                 if(r.success === true) {
-                    toastr["success"]("Página cadastrada com sucesso!", "Sucesso")
+                    toastr["success"]("Marca cadastrada com sucesso!", "Sucesso")
                     setTimeout(() => {
-                        window.location.href = url_pages;
+                        window.location.href = url_list;
                     }, 1000 );
                 } else {
                     let msg = new Array(r.message);
@@ -46,10 +33,11 @@ $(function() {
         });
     })
     $("input[type=file]").on("change", function(){
-        let img = document.querySelector("#avatar_new_user").files[0];
+        let img = document.querySelector("#img_new_brand").files[0];
+        if(!img) return;
         let src = URL.createObjectURL(img);
-        $('.new_avatar_label').html(img.name);
-        $('.new_avatar_view').html(`<img src="${src}" class="img-fluid" style="max-height:350px" />`);
+        $('.new_img_label').html(`${img.name}`);
+        $('#img-brand').attr('src', src);
     });
 })
 

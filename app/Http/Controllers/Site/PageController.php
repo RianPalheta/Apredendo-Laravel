@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Controllers\Site;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Page;
+
+class PageController extends Controller
+{
+    public function index($slug) {
+        $slug = explode('/', $slug);
+        $slug = end($slug);
+        $page = Page::where('slug', $slug)->first();
+
+        if($page) {
+            return view('site.page', [
+                'page' => $page
+            ]);
+        } else {
+            abort(404);
+        }
+    }
+}

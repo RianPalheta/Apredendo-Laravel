@@ -2,11 +2,11 @@ var qt_result_pg = 50;
 var page = 1;
 
 $(document).ready(function() {
-    if(localStorage.getItem('current_page_list_pages')) {
-        page = localStorage.getItem('current_page_list_pages');
+    if(localStorage.getItem('current_page_list_brands')) {
+        page = localStorage.getItem('current_page_list_brands');
     }
-    if(localStorage.getItem('qt_result_pg_list_pages')) {
-        qt_result_pg = localStorage.getItem('qt_result_pg_list_pages');
+    if(localStorage.getItem('qt_result_pg_list_brands')) {
+        qt_result_pg = localStorage.getItem('qt_result_pg_list_brands');
     }
 
     if($('table').length > 0) {
@@ -15,14 +15,14 @@ $(document).ready(function() {
                 item.setAttribute('selected','selected')
             }
         });
-        list_pages(page, qt_result_pg);
+        list_brands(page, qt_result_pg);
     }
 });
 
 $('select').on('change', function() {
     let option = $('select').val();
-    localStorage.setItem('qt_result_pg_list_pages', option);
-    list_pages(1, option);
+    localStorage.setItem('qt_result_pg_list_brands', option);
+    list_brands(1, option);
 });
 
 var typingTimer; //timer identifier
@@ -43,11 +43,11 @@ $('#search').keyup(function() {
 //user is "finished typing," do something
 function doneTyping() {
     let serach = $('#search input').val();
-    list_pages(1, localStorage.getItem('qt_result_pg_list_pages'), serach);
+    list_brands(1, localStorage.getItem('qt_result_pg_list_brands'), serach);
 }
 
 
-function list_pages(page, qt, search = null) {
+function list_brands(page, qt, search = null) {
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -63,7 +63,7 @@ function list_pages(page, qt, search = null) {
             let last_page = response.last_page;
             let current_page = response.current_page
             let data = response.data;
-            localStorage.setItem('current_page_list_pages', current_page);
+            localStorage.setItem('current_page_list_brands', current_page);
 
             $('tbody').html('');
             $('.card-header ul').html('');
@@ -74,10 +74,9 @@ function list_pages(page, qt, search = null) {
                     let table = `
                     <tr>
                         <td>${i.id}</td>
-                        <td>${i.title}</td>
+                        <td>${i.name}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a title="Visualisar" target="_blank" href="${url_page}/${i.slug}" class="btn btn-sm btn-warning"><i class="far fa-eye"></i></a>
                                 <a title="Editar" href="${url_edit_page}" class="btn btn-sm btn-info"><i class="fas fa-user-edit"></i></a>
                                 <button onclick="delete_user(${i.id})" title="Deletar" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                             </div>
@@ -88,7 +87,7 @@ function list_pages(page, qt, search = null) {
                     return;
                 });
             } else {
-                $('table').html("<div class='alert alert-light' role='alert'>Não há páginas para mostrar.</div>");
+                $('table').html("<div class='alert alert-light' role='alert'>Não há marcas para mostrar.</div>");
                 return;
             }
 
@@ -129,7 +128,7 @@ function list_pages(page, qt, search = null) {
                     e.preventDefault();
                     let attr = item.getAttribute('href');
                     if(parseInt(current_page) != parseInt(attr)) {
-                        list_pages(attr, localStorage.getItem('qt_result_pg_list_pages'));
+                        list_brands(attr, localStorage.getItem('qt_result_pg_list_brands'));
                     }
                 })
             });
@@ -158,9 +157,9 @@ function delete_user(id) {
                 if(r.success === false) {
                     return;
                 }
-                list_pages(
-                    localStorage.getItem('current_page_list_pages'),
-                    localStorage.getItem('qt_result_pg_list_pages')
+                list_brands(
+                    localStorage.getItem('current_page_list_brands'),
+                    localStorage.getItem('qt_result_pg_list_brands')
                 );
             }
         });

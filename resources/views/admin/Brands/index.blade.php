@@ -1,23 +1,23 @@
 @extends('adminlte::page')
 
-@section('title', 'Usuários')
+@section('title', 'Marcas')
 
 @section('content_header')
     <div class="d-flex justify-content-between">
-        <h1>Usuários <span></span></h1>
-        <a title="Adicionar um novo usuário" href="{{ route('users.create') }}" class="btn btn-success"><i class="fas fa-user-plus"></i></a>
+        <h1>Marcas <span></span></h1>
+        <a title="Adicionar uma nova marca" href="{{ route('brands.create') }}" class="btn btn-success"><i class="fas fa-plus"></i></a>
     </div>
 @stop
 
 @section('js')
     <script>
-        const logged = {{ $logged }};
-        const url = "{{ route('getUsers') }}";
-        const url_edit = "{{ route('users.edit', [1]) }}";
-        const url_del = "{{ route('users.destroy', [1]) }}";
+        const url = "{{ route('getBrands') }}";
+        const url_edit = "{{ route('brands.edit', [1]) }}";
+        const url_del = "{{ route('brands.destroy', [1]) }}";
+        const assets = "{{ asset('media/brands') }}";
     </script>
     <script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/users/painel.users.js') }}"></script>
+    <script src="{{ asset('assets/js/brands/painel.brands.js') }}"></script>
 @endsection
 
 @section('content')
@@ -26,11 +26,10 @@
             <div class="col-md-3">
                 <div class="dataTables_info" id="example2_info" role="status" aria-live="polite">
                     <font style="vertical-align: inherit;">
-                        <font id="info-pages" style="vertical-align: inherit;">...</font>
+                        <font id="info-pages" style="vertical-align: inherit;"></font>
                     </font>
                 </div>
             </div>
-
 
             <form>
                 <select class="form-control">
@@ -66,10 +65,9 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th width="100">ID</th>
                         <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Ações</th>
+                        <th width="150">Ações</th>
                     </tr>
                 </thead>
                 <tbody></tbody>

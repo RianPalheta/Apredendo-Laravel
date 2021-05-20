@@ -1,11 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Site\PageController as SitePageController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
-use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
-use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\BrandController as AdminBrandController;
+use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
+use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,4 +42,10 @@ Route::prefix('painel')->group(function() {
     Route::get('pages', [AdminPageController::class, 'index'])->name('pages.list');
     Route::get('pages/add', [AdminPageController::class, 'create'])->name('pages.create');
     Route::get('pages/{id}/edit', [AdminPageController::class, 'edit'])->name('pages.edit');
+
+    Route::get('brands', [AdminBrandController::class, 'index'])->name('brands.list');
+    Route::get('brands/add', [AdminBrandController::class, 'create'])->name('brands.create');
+    Route::get('brands/{id}/edit', [AdminBrandController::class, 'edit'])->name('brands.edit');
 });
+
+Route::fallback([SitePageController::class, 'index']);

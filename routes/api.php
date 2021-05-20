@@ -3,8 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CorreiosController;
-use App\Http\Controllers\Admin\PageController as AdminPageController;
-use App\Http\Controllers\Admin\UserApiController as AdminUserApiController;
+use App\Http\Controllers\Admin\Api\PageApiController as AdminPageApiController;
+use App\Http\Controllers\Admin\Api\UserApiController as AdminUserApiController;
+use App\Http\Controllers\Admin\Api\BrandApiController as AdminBrandApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,10 +28,16 @@ Route::prefix('painel')->group(function() {
     Route::post('users/create/user', [AdminUserApiController::class, 'create_user'])->name('users.add');
     Route::delete('users/destroy/{id}', [AdminUserApiController::class, 'destroy'])->name('users.destroy');
 
-    Route::get('pages/get', [AdminPageController::class, 'get_pages'])->name('getPages');
-    Route::put('pages/update/{id}', [AdminPageController::class, 'update'])->name('pages.update');
-    Route::post('pages/create/user', [AdminPageController::class, 'create_user'])->name('pages.add');
-    Route::delete('pages/destroy/{id}', [AdminPageController::class, 'destroy'])->name('pages.destroy');
+    Route::get('pages/get', [AdminPageApiController::class, 'get_pages'])->name('getPages');
+    Route::put('pages/update/{id}', [AdminPageApiController::class, 'update'])->name('pages.update');
+    Route::post('pages/create/user', [AdminPageApiController::class, 'create_page'])->name('pages.add');
+    Route::post('pages/imageupload', [AdminPageApiController::class, 'imageupload'])->name('imageupload');
+    Route::delete('pages/destroy/{id}', [AdminPageApiController::class, 'destroy'])->name('pages.destroy');
+
+    Route::get('brands/get', [AdminBrandApiController::class, 'get_brands'])->name('getBrands');
+    Route::post('brands/update/{id}', [AdminBrandApiController::class, 'update'])->name('brands.update');
+    Route::post('brands/create/user', [AdminBrandApiController::class, 'store'])->name('brands.add');
+    Route::delete('brands/destroy/{id}', [AdminBrandApiController::class, 'destroy'])->name('brands.destroy');
 });
 
 Route::get('cep', [CorreiosController::class, 'cep'])->name('cep');

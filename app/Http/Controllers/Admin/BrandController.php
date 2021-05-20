@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Page;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 
-class PageController extends Controller
+class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        return view('admin.Pages.index');
+        return view('admin.Brands.index');
     }
 
     /**
@@ -25,18 +25,7 @@ class PageController extends Controller
      */
     public function create()
     {
-        return view('admin.Pages.add');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return view('admin.Brands.add');
     }
 
     /**
@@ -58,14 +47,14 @@ class PageController extends Controller
      */
     public function edit($id)
     {
-        $page = Page::find($id);
+        $brand = Brand::find($id);
 
-        if($page) {
-            return view('admin.Pages.edit', [
-                'page' => $page
+        if($brand) {
+            return view('admin.Brands.edit', [
+                'brand' => $brand
             ]);
+        } else {
+            return redirect()->route('brands.list');
         }
-
-        return redirect()->route('pages.list');
     }
 }

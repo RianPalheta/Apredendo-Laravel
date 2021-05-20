@@ -5,7 +5,7 @@
 @section('content_header')
     <div class="d-flex justify-content-between">
         <h1>Páginas <span></span></h1>
-        <a href="{{ route('pages.create') }}" class="btn btn-success"><i class="fas fa-user-plus"></i></a>
+        <a title="Adicionar uma nova página" href="{{ route('pages.create') }}" class="btn btn-success"><i class="fas fa-plus"></i></a>
     </div>
 @stop
 
@@ -14,6 +14,7 @@
         const url = "{{ route('getPages') }}";
         const url_edit = "{{ route('pages.edit', [1]) }}";
         const url_del = "{{ route('pages.destroy', [1]) }}";
+        const url_page = "{{ Request::url() }}";
     </script>
     <script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/painel.pages.js') }}"></script>
@@ -23,11 +24,7 @@
     <div class="card">
         <div class="card-header clearfix row justify-content-between align-items-center">
             <div class="col-md-3">
-                <div class="dataTables_info" id="example2_info" role="status" aria-live="polite">
-                    <font style="vertical-align: inherit;">
-                        <font id="info-pages" style="vertical-align: inherit;">...</font>
-                    </font>
-                </div>
+                <div class="dataTables_info" id="info-pages" role="status" aria-live="polite"></div>
             </div>
 
 
@@ -65,9 +62,9 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th width="100">ID</th>
                         <th>Título</th>
-                        <th>Ações</th>
+                        <th width="150">Ações</th>
                     </tr>
                 </thead>
                 <tbody></tbody>

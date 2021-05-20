@@ -67,7 +67,7 @@ return [
     'usermenu_enabled' => true,
     'usermenu_header' => false,
     'usermenu_header_class' => 'bg-primary',
-    'usermenu_image' => false,
+    'usermenu_image' => true,
     'usermenu_desc' => false,
     'usermenu_profile_url' => false,
 
@@ -193,7 +193,7 @@ return [
     'register_url' => 'painel/register',
     'password_reset_url' => 'painel/password/reset',
     'password_email_url' => 'painel/password/email',
-    'profile_url' => false,
+    'profile_url' => 'painel/profile',
 
     /*
     |--------------------------------------------------------------------------
@@ -229,6 +229,12 @@ return [
             'url'  => 'painel',
             'icon' => 'fas fa-tachometer-alt',
         ],
+        ['header' => 'Loja'],
+        [
+            'text' => 'Marcas',
+            'url'  => 'painel/brands',
+            'icon' => 'fas fa-ticket-alt',
+        ],
         [
             'text' => 'Páginas',
             'url'  => 'painel/pages',
@@ -239,14 +245,9 @@ return [
             'url'  => 'painel/users',
             'icon' => 'fas fa-users',
         ],
-        ['header' => 'account_settings'],
+        ['header' => 'Configurações do Sistema'],
         [
-            'text' => 'Meu Perfil',
-            'url'  => 'admin/profile',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'Configurações do Sistema',
+            'text' => 'Configurações',
             'url'  => 'painel/settings',
             'icon' => 'fas fa-cogs',
         ],

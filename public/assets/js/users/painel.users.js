@@ -67,23 +67,28 @@ function list_users(page, qt, search = null) {
 
             $('tbody').html('');
             $('.card-header ul').html('');
-            data.map(i => {
-                let url_edit_user = url_edit.replace('1', i.id);
-                let table = `
-                <tr>
-                    <td>${i.id}</td>
-                    <td>${i.name}</td>
-                    <td>${i.email}</td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <a title="Editar" href="${url_edit_user}" class="btn btn-sm btn-info"><i class="fas fa-user-edit"></i></a>
-                            <button onclick="delete_user(${i.id})" title="Deletar" class="btn btn-sm btn-danger ${i.id === logged ? 'disabled' : ''}"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                `
-                $('tbody').append(table);
-            });
+            if(parseInt(response.total) > 0) {
+                data.map(i => {
+                    let url_edit_user = url_edit.replace('1', i.id);
+                    let table = `
+                    <tr>
+                        <td>${i.id}</td>
+                        <td>${i.name}</td>
+                        <td>${i.email}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a title="Editar" href="${url_edit_user}" class="btn btn-sm btn-info"><i class="fas fa-user-edit"></i></a>
+                                <button onclick="delete_user(${i.id})" title="Deletar" class="btn btn-sm btn-danger ${i.id === logged ? 'disabled' : ''}"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    `
+                    $('tbody').append(table);
+                });
+            } else {
+                $('table').html("<div class='alert alert-light' role='alert'>Não há usuários para mostrar.</div>");
+                return;
+            }
 
             const max_links = 2;
             if(last_page > 1) {
@@ -113,7 +118,8 @@ function list_users(page, qt, search = null) {
             }
 
             $('#info-pages').html(`Mostrando ${current_page} de ${last_page} páginas`);
-            $('h1 span').html(`(${response.total})`);
+            $('h1 span').addClass('badge bg-secondary');
+            $('h1 span').html(`${response.total}`);
 
             const page_link = [...$('.page-link')];
             page_link.forEach(item => {
