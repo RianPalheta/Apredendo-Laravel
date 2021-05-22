@@ -57,7 +57,7 @@ function list_users(page, qt, search = null) {
         data: {page, qt, search},
         dataType:'JSON',
         beforeSend: function() {
-            $('tbody').html("Carregando...")
+            $('tbody').html("<div class='d-flex justify-content-center align-items-center'><i class='fas fa-circle-notch rotafe-infinit'></i></div>")
         },
         success:function(response) {
             let last_page = response.last_page;
@@ -72,7 +72,6 @@ function list_users(page, qt, search = null) {
                     let url_edit_user = url_edit.replace('1', i.id);
                     let table = `
                     <tr>
-                        <td>${i.id}</td>
                         <td>${i.name}</td>
                         <td>${i.email}</td>
                         <td>

@@ -139,6 +139,7 @@ class UserApiController extends Controller
             'uf',
             'cep',
             'cpf',
+            'road',
             'city',
             'district',
             'password',
@@ -245,12 +246,13 @@ class UserApiController extends Controller
     {
         return Validator::make($data, [
             'uf'            => 'min:2',
-            'cep'           => 'string|min:8|max:10',
+            'avatar'        => 'image|max:5243',
             'complement'    => 'string|max:100',
             'city'          => 'string|max:100',
             'district'      => 'string|max:100',
             'number_home'   => 'string|max:100',
-            'avatar'        => 'image|max:5243',
+            'road'          => 'string|max:100',
+            'cep'           => 'string|min:8|max:10',
             $req ? "'birthday' => 'required'" : '',
             'cpf'           => $req ? 'required|cpf_cnpj' : 'cpf_cnpj',
             'telephone'     => $req ? 'required|string|max:16' : 'string|max:16',

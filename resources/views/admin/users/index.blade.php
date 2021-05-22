@@ -9,6 +9,10 @@
     </div>
 @stop
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/loading.css') }}">
+@endsection
+
 @section('js')
     <script>
         const logged = {{ $logged }};
@@ -66,7 +70,6 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Nome</th>
                         <th>E-mail</th>
                         <th>Ações</th>

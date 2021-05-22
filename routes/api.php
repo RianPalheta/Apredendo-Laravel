@@ -6,6 +6,7 @@ use App\Http\Controllers\CorreiosController;
 use App\Http\Controllers\Admin\Api\PageApiController as AdminPageApiController;
 use App\Http\Controllers\Admin\Api\UserApiController as AdminUserApiController;
 use App\Http\Controllers\Admin\Api\BrandApiController as AdminBrandApiController;
+use App\Http\Controllers\Admin\Api\CategoryApiController as AdminCategoryApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,11 @@ Route::prefix('painel')->group(function() {
     Route::post('brands/update/{id}', [AdminBrandApiController::class, 'update'])->name('brands.update');
     Route::post('brands/create/user', [AdminBrandApiController::class, 'store'])->name('brands.add');
     Route::delete('brands/destroy/{id}', [AdminBrandApiController::class, 'destroy'])->name('brands.destroy');
+
+    Route::get('categories/get', [AdminCategoryApiController::class, 'get_categories'])->name('getCategories');
+    Route::post('categories/update/{id}', [AdminCategoryApiController::class, 'update'])->name('categories.update');
+    Route::post('categories/create/user', [AdminCategoryApiController::class, 'store'])->name('categories.add');
+    Route::delete('categories/destroy/{id}', [AdminCategoryApiController::class, 'destroy'])->name('categories.destroy');
 });
 
 Route::get('cep', [CorreiosController::class, 'cep'])->name('cep');

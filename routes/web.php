@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\BrandController as AdminBrandController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterController;
 
 /*
@@ -46,6 +47,10 @@ Route::prefix('painel')->group(function() {
     Route::get('brands', [AdminBrandController::class, 'index'])->name('brands.list');
     Route::get('brands/add', [AdminBrandController::class, 'create'])->name('brands.create');
     Route::get('brands/{id}/edit', [AdminBrandController::class, 'edit'])->name('brands.edit');
+
+    Route::get('categories', [AdminCategoryController::class, 'index'])->name('categories.list');
+    Route::get('categories/add', [AdminCategoryController::class, 'create'])->name('categories.create');
+    Route::get('categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
 });
 
 Route::fallback([SitePageController::class, 'index']);

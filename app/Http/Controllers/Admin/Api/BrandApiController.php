@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin\Api;
 
-use App\Models\Page;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,11 +14,11 @@ class BrandApiController extends Controller
         $search['content'] = $request->input('search');
 
         $qt = intval($request->input('qt', 10));
-        $users = Brand::where('name', 'like', '%'.$search['content'].'%')
+        $brands = Brand::where('name', 'like', '%'.$search['content'].'%')
             ->orderByDesc('id')
             ->paginate($qt);
 
-        echo json_encode($users);
+        echo json_encode($brands);
         return;
     }
 

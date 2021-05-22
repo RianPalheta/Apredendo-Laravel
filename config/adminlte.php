@@ -229,21 +229,43 @@ return [
             'url'  => 'painel',
             'icon' => 'fas fa-tachometer-alt',
         ],
-        ['header' => 'Loja'],
         [
-            'text' => 'Marcas',
-            'url'  => 'painel/brands',
-            'icon' => 'fas fa-ticket-alt',
+            'text'      => 'Produtos',
+            'icon'      => 'fab fa-product-hunt',
+            'submenu'   => [
+                [
+                    'text' => 'Marcas',
+                    'url'  => 'painel/brands',
+                    'icon' => 'fas fa-ticket-alt',
+                ],
+                [
+                    'text' => 'Categorias',
+                    'url'  => 'painel/categories',
+                    'icon' => 'fas fa-boxes',
+                ],
+            ],
         ],
         [
-            'text' => 'Páginas',
-            'url'  => 'painel/pages',
-            'icon' => 'far fa-sticky-note',
+            'text'      => 'Clientes',
+            'icon'      => 'fas fa-users',
+            'submenu'   => [
+                [
+                    'text' => 'Usuários',
+                    'url'  => 'painel/users',
+                    'icon' => 'fas fa-user-friends',
+                ],
+            ],
         ],
         [
-            'text' => 'Usuários',
-            'url'  => 'painel/users',
-            'icon' => 'fas fa-users',
+            'text'      => 'Conteúdo',
+            'icon'      => 'fas fa-file-signature',
+            'submenu'   => [
+                [
+                    'text' => 'Páginas',
+                    'url'  => 'painel/pages',
+                    'icon' => 'far fa-sticky-note',
+                ],
+            ],
         ],
         ['header' => 'Configurações do Sistema'],
         [
