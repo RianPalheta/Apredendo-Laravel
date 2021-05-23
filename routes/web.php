@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\BrandController as AdminBrandController;
+use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterController;
@@ -51,6 +52,10 @@ Route::prefix('painel')->group(function() {
     Route::get('categories', [AdminCategoryController::class, 'index'])->name('categories.list');
     Route::get('categories/add', [AdminCategoryController::class, 'create'])->name('categories.create');
     Route::get('categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
+
+    Route::get('gallery', [AdminGalleryController::class, 'index'])->name('gallery.list');
+    Route::get('gallery/add', [AdminGalleryController::class, 'create'])->name('gallery.create');
+    Route::get('gallery/{id}/edit', [AdminGalleryController::class, 'edit'])->name('gallery.edit');
 });
 
 Route::fallback([SitePageController::class, 'index']);

@@ -9,6 +9,10 @@
     </div>
 @stop
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/loading.css') }}">
+@endsection
+
 @section('js')
     <script>
         const url = "{{ route('getBrands') }}";
@@ -65,9 +69,8 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th width="100">ID</th>
-                        <th>Nome</th>
-                        <th width="150">Ações</th>
+                        <th width="100%">Nome</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody></tbody>

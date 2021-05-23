@@ -10,6 +10,7 @@
 @stop
 
 @section('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr.min.css') }}">
 @endsection
 

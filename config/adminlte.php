@@ -14,9 +14,9 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'Mercado Tucujur',
     'title_prefix' => '',
-    'title_postfix' => '',
+    'title_postfix' => ' - M. Tucujur',
 
     /*
     |--------------------------------------------------------------------------
@@ -85,8 +85,8 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
-    'layout_fixed_navbar' => null,
+    'layout_fixed_sidebar' => true,
+    'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
 
     /*
@@ -125,7 +125,7 @@ return [
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
-    'classes_content' => '',
+    'classes_content' => 'content-load position-relative',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
     'classes_sidebar_nav' => '',
     'classes_topnav' => 'navbar-white navbar-light',
@@ -145,9 +145,9 @@ return [
     */
 
     'sidebar_mini' => true,
-    'sidebar_collapse' => false,
-    'sidebar_collapse_auto_size' => false,
-    'sidebar_collapse_remember' => false,
+    'sidebar_collapse' => null,
+    'sidebar_collapse_auto_size' => null,
+    'sidebar_collapse_remember' => null,
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
@@ -268,6 +268,11 @@ return [
             ],
         ],
         ['header' => 'Configurações do Sistema'],
+        [
+            'text' => 'Galeria',
+            'url'  => 'painel/gallery',
+            'icon' => 'far fa-images',
+        ],
         [
             'text' => 'Configurações',
             'url'  => 'painel/settings',

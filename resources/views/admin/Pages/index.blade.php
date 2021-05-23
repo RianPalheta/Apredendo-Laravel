@@ -9,6 +9,10 @@
     </div>
 @stop
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/loading.css') }}">
+@endsection
+
 @section('js')
     <script>
         const url = "{{ route('getPages') }}";
@@ -26,7 +30,6 @@
             <div class="col-md-3">
                 <div class="dataTables_info" id="info-pages" role="status" aria-live="polite"></div>
             </div>
-
 
             <form>
                 <select class="form-control">
@@ -62,7 +65,6 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th width="100">ID</th>
                         <th>Título</th>
                         <th width="150">Ações</th>
                     </tr>

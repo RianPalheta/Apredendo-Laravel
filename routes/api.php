@@ -6,6 +6,7 @@ use App\Http\Controllers\CorreiosController;
 use App\Http\Controllers\Admin\Api\PageApiController as AdminPageApiController;
 use App\Http\Controllers\Admin\Api\UserApiController as AdminUserApiController;
 use App\Http\Controllers\Admin\Api\BrandApiController as AdminBrandApiController;
+use App\Http\Controllers\Admin\Api\GalleryApiController as AdminGalleryApiController;
 use App\Http\Controllers\Admin\Api\CategoryApiController as AdminCategoryApiController;
 
 /*
@@ -44,6 +45,11 @@ Route::prefix('painel')->group(function() {
     Route::post('categories/update/{id}', [AdminCategoryApiController::class, 'update'])->name('categories.update');
     Route::post('categories/create/user', [AdminCategoryApiController::class, 'store'])->name('categories.add');
     Route::delete('categories/destroy/{id}', [AdminCategoryApiController::class, 'destroy'])->name('categories.destroy');
+
+    Route::get('gallery/get', [AdminGalleryApiController::class, 'get_photos'])->name('getPhotos');
+    Route::post('gallery/update/{id}', [AdminGalleryApiController::class, 'update'])->name('gallery.update');
+    Route::post('gallery/create/user', [AdminGalleryApiController::class, 'store'])->name('gallery.add');
+    Route::delete('gallery/destroy/{id}', [AdminGalleryApiController::class, 'destroy'])->name('gallery.destroy');
 });
 
 Route::get('cep', [CorreiosController::class, 'cep'])->name('cep');

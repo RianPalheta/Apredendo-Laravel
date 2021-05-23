@@ -57,7 +57,7 @@ function list_brands(page, qt, search = null) {
         data: {page, qt, search},
         dataType:'JSON',
         beforeSend: function() {
-            $('tbody').html("Carregando...")
+            $('.content-load').append("<div id='content-load' class='position-absolute card d-flex justify-content-center align-items-center' style='z-index: 3; width:100%; height:100%; top:0; left:0;'><i class='fas fa-circle-notch rotafe-infinit' style='font-size:2.5rem'></i></div>");
         },
         success:function(response) {
             let last_page = response.last_page;
@@ -66,6 +66,7 @@ function list_brands(page, qt, search = null) {
             localStorage.setItem('current_page_list_brands', current_page);
 
             $('tbody').html('');
+            $('#content-load').remove();
             $('.card-header ul').html('');
 
             if(parseInt(response.total) > 0) {
@@ -73,11 +74,10 @@ function list_brands(page, qt, search = null) {
                     let url_edit_page = url_edit.replace('1', i.id);
                     let table = `
                     <tr>
-                        <td>${i.id}</td>
-                        <td>${i.name}</td>
+                        <td class="d-inline-block text-truncate">${i.name}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a title="Editar" href="${url_edit_page}" class="btn btn-sm btn-info"><i class="fas fa-user-edit"></i></a>
+                                <a title="Editar" href="${url_edit_page}" class="btn btn-sm btn-info"><i class="fas fa-pen-alt"></i></a>
                                 <button onclick="delete_user(${i.id})" title="Deletar" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                             </div>
                         </td>

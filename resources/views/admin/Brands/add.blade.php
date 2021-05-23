@@ -7,8 +7,8 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/dropzone.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
 @endsection
 
 @section('js')
@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex">
+                {{-- <div class="d-flex">
                     <div class="d-flex justify-content-center align-items-center" style="flex:1;">
                         <div class="custom-file">
                             <input type="file" name="img" class="custom-file-input" id="img_new_brand">
@@ -48,6 +48,13 @@
                         <div class="d-flex new_img_view justify-content-center align-items-center m-2" style="width:100px">
                             <img id="img-brand" width="100%" src="{{ asset('media/brands/default.png') }}">
                         </div>
+                    </div>
+                </div> --}}
+
+                <div class="form-group">
+                    <div class="drop-zone">
+                        <span class="drop-zone__prompt">Solte a imagem aqui ou clique para fazer o upload.</span>
+                        <input type="file" name="img" class="drop-zone__input">
                     </div>
                 </div>
             </div>

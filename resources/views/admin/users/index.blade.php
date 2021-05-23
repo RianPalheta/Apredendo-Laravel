@@ -70,9 +70,11 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Ações</th>
+                        <th width="">Nome</th>
+                        <th width="">E-mail</th>
+                        <th width="">Telefone</th>
+                        <th width="">Data de cadastro</th>
+                        <th width="10%">Ações</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
