@@ -8,8 +8,7 @@
     width: 100%;
     height: auto;
     padding: 25px;
-    max-width: 200px;
-    max-height: 200px;
+    min-height: 200px;
 
     display: flex;
     flex-wrap: wrap;
@@ -60,7 +59,6 @@
     background-repeat: no-repeat;
 
     opacity: 0;
-    transform: translateX(-30px);
     animation: thumbnail .3s linear forwards;
 }
 .drop-zone__thumb::after {
@@ -81,7 +79,6 @@
 @keyframes thumbnail {
     to {
         opacity: 1;
-        transform: translateX(0);
     }
 }
 
@@ -101,17 +98,32 @@
 img {
     display: block;
     object-fit: cover;
+    max-height: 300px;
 }
 .img-area .img-name {
     position: absolute;
-    font-size: 1rem;
 
+    font-size: 1rem;
     text-align: center;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    width: 100%;
+    max-width: 200px;
+    padding: 5px 10px;
 
     left: 0;
     bottom: 0;
-    width: 100%;
     color: #fff;
-    padding: 5px 0;
     background-color: rgba(0, 0, 0, .75);
+}
+.lozad {
+    opacity: 0;
+}
+
+.lozad-ready {
+    opacity: 1;
+    transition: opacity 1s;
 }

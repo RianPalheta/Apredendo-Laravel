@@ -48,7 +48,7 @@ Route::prefix('painel')->group(function() {
 
     Route::get('gallery/get', [AdminGalleryApiController::class, 'get_photos'])->name('getPhotos');
     Route::post('gallery/update/{id}', [AdminGalleryApiController::class, 'update'])->name('gallery.update');
-    Route::post('gallery/create/user', [AdminGalleryApiController::class, 'store'])->name('gallery.add');
+    Route::post('gallery/add/photo', [AdminGalleryApiController::class, 'store'])->name('gallery.add');
     Route::delete('gallery/destroy/{id}', [AdminGalleryApiController::class, 'destroy'])->name('gallery.destroy');
 });
 

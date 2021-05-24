@@ -10,9 +10,11 @@
 @stop
 
 @section('css')
+    <meta name="auth" content="{{ Auth::id() }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/progressive-image.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr.min.css') }}">
 @endsection
 
 @section('js')
@@ -20,12 +22,13 @@
         const url = "{{ route('getPhotos') }}";
         const asset = "{{ asset('media/gallery') }}";
         const url_gallery = "{{ Request::url() }}";
-        const url_add = "{{ route('gallery.create') }}";
-        const url_edit = "{{ route('gallery.edit', [1]) }}";
+        const url_add = "{{ route('gallery.add') }}";
+        const url_edit = "{{ route('gallery.update', [1]) }}";
         const url_del = "{{ route('gallery.destroy', [1]) }}";
     </script>
     <script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/lodash.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/lozad.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/toastr.min.js') }}"></script>
     <script src="{{ asset('assets/js/gallery/painel.gallery.js') }}"></script>
@@ -35,23 +38,28 @@
     <div class="modal fade" id="add-photo" tabindex="-1" role="dialog" aria-labelledby="img-add-photo" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="img-add-photo">Adicionar Foto</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <div class="drop-zone">
-                        <span class="drop-zone__prompt">Solte a imagem aqui ou clique para fazer o upload.</span>
-                        <input type="file" name="img" class="drop-zone__input">
-                    </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="img-add-photo">Adicionar Fotos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Adicionar</button>
-            </div>
+                <div class="modal-body">
+                    <form id="photo-add">
+                        <div class="form-group">
+                            <div class="drop-zone">
+                                <span class="drop-zone__prompt">Solte a imagem aqui ou clique para fazer o upload.</span>
+                                <input type="file" name="photo[]" class="drop-zone__input" multiple>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin: 0">
+                            <div class="progress" style="height: 15px;">
+                                <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -73,7 +81,7 @@
             </div>
         </div>
         <div class="card-body">
-            <div id="gallery-area" class="row"></div>
+            <div id="gallery-area" class="row d-flex justify-content-center align-items-center"></div>
         </div>
     </div>
 @stop
