@@ -3,11 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CorreiosController;
+use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\Api\PageApiController as AdminPageApiController;
 use App\Http\Controllers\Admin\Api\UserApiController as AdminUserApiController;
 use App\Http\Controllers\Admin\Api\BrandApiController as AdminBrandApiController;
+use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterController;
 use App\Http\Controllers\Admin\Api\GalleryApiController as AdminGalleryApiController;
 use App\Http\Controllers\Admin\Api\CategoryApiController as AdminCategoryApiController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +26,9 @@ use App\Http\Controllers\Admin\Api\CategoryApiController as AdminCategoryApiCont
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('login', [AdminLoginController::class, 'authenticate'])->name('auth.login');
+Route::post('register', [AdminRegisterController::class, 'register'])->name('auth.register');
 
 Route::prefix('painel')->group(function() {
     Route::get('users/get', [AdminUserApiController::class, 'get_users'])->name('getUsers');

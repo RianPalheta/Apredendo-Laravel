@@ -12,7 +12,6 @@ class CorreiosController extends Controller
         $req_cep = $request->input('cep');
         $cep = $correios->cep($req_cep);
 
-        echo json_encode($cep);
-        return;
+        return response()->json($cep);
     }
 }

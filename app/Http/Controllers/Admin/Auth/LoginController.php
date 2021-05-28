@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
@@ -54,21 +54,19 @@ class LoginController extends Controller
         if($validator->fails()) {
             $login['success'] = false;
             $login['message'] = $validator->errors(); // 'Dados inválidos, tente novamente.'
-            echo json_encode($login);
-            return;
+            return response()->json($login);
         }
 
         if(Auth::attempt($data, $remember)) {
             $login['success'] = true;
             $login['message'] = '';
-            echo json_encode($login);
-            return;
+            return response()->json($login);
         } else {
             $login['success'] = false;
             $login['message'] = 'Email e/ou senha inválidos.';
-            echo json_encode($login);
-            return;
+            return response()->json($login);
         }
+
     }
     public function logout() {
         Auth::logout();

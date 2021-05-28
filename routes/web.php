@@ -32,10 +32,8 @@ Route::prefix('painel')->group(function() {
     Route::post('logout', [AdminLoginController::class, 'logout'])->name('logout');
 
     Route::get('login', [AdminLoginController::class, 'index'])->name('login');
-    Route::post('login', [AdminLoginController::class, 'authenticate'])->name('auth.login');
 
     Route::get('register', [AdminRegisterController::class, 'index'])->name('register');
-    Route::post('register', [AdminRegisterController::class, 'register'])->name('auth.register');
 
     Route::get('users', [AdminUserController::class, 'index'])->name('users.list');
     Route::get('users/add', [AdminUserController::class, 'create'])->name('users.create');

@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -18,9 +18,20 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'uf',
+        'cpf',
+        'cep',
         'name',
+        'city',
+        'road',
         'email',
+        'avatar',
         'password',
+        'birthday',
+        'district',
+        'telephone',
+        'complement',
+        'number_home',
     ];
 
     /**

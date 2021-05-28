@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 
@@ -19,8 +18,7 @@ class GalleryApiController extends Controller
             ->orderByDesc('id')
             ->paginate($qt);
 
-        echo json_encode($photos);
-        return;
+        return response()->json($photos);
     }
 
     public function store(Request $request)
@@ -30,27 +28,26 @@ class GalleryApiController extends Controller
         for($i = 0; $i < count($photos); $i++) {
             $photo = $photos[$i];
             $validator = Validator::make($photos, [
-                $i => 'image|max:5243|dimensions:max_width=4000,max_height=3000' // 5243
+                $i => 'image|max:2243|dimensions:max_width=4000,max_height=3000'
             ]);
             if($validator->fails()) {
                 $create['success'] = false;
                 $create['message'] = $validator->errors();
             } else {
-                $date_photo = $this->encodeImg($photo->path(), 'webp', 100);
+                $data_photo = $this->encodeImg($photo->path(), 'webp', 100);
                 $data = new Photo;
                 $data->name = explode('.', $photo->getClientOriginalName())[0];
-                $data->hash = $date_photo['hash'];
-                $data->size = $date_photo['size'];
-                $data->dimension = $date_photo['dimension'];
+                $data->hash = $data_photo['hash'];
+                $data->size = $data_photo['size'];
+                $data->dimension = $data_photo['dimension'];
                 $data->save();
 
                 $create['success'] = true;
             }
-            unset($photos[$i]);
             unset($photo);
         }
-        echo json_encode($create);
-        return;
+
+        return response()->json($create);
     }
 
     public function show($id)
@@ -61,6 +58,7 @@ class GalleryApiController extends Controller
     public function update(Request $request, $id)
     {
         $photo = Photo::find($id);
+
         $data = $request->only([
             'name',
             'description'
@@ -113,14 +111,22 @@ class GalleryApiController extends Controller
     }
 
     private function encodeImg($n, $ext, $ql) {
-        $img = [];
         $image = Image::make($n);
-        if(in_array($image->mime(), ['image/jpg', 'image/jpeg', 'image/png'])) {
+        if(in_array($image->mime(), ['image/jpg', 'image/jpeg', 'image/png', 'image/svg'])) {
             $image->encode($ext, $ql);
+        } else {
+            $ext = explode('/', $image->mime())[1];
         }
         $img_hash = md5(strtotime('now').rand(1000,9999)).'.'.$ext;
-        $image->save(public_path('media').'/gallery/'.$img_hash);
+        $image->save(public_path('media').'/gallery/'.$img_hash, $ql);
         $img['hash'] = $img_hash;
+        $img['size'] = $image->filesize();
+        $img['dimension'] = $image->width().' x '.$image->height();
+        return $img;
+    }
+
+    private function infoImage($n) {
+        $image = Image::make($n);
         $img['size'] = $image->filesize();
         $img['dimension'] = $image->width().' x '.$image->height();
         return $img;

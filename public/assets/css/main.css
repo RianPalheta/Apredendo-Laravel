@@ -95,6 +95,12 @@
 .img-select {
     border: 5px solid #009578;
 }
+.img-checkbox {
+    /* display: none; */
+}
+label {
+    width: 200px;
+}
 img {
     display: block;
     object-fit: cover;
@@ -126,4 +132,9 @@ img {
 .lozad-ready {
     opacity: 1;
     transition: opacity 1s;
+}
+
+.hidden {
+    position: absolute;
+    left: 1000vw;
 }

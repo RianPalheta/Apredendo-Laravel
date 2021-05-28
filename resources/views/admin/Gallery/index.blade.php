@@ -59,6 +59,7 @@
                             </div>
                         </div>
                     </form>
+                    <small class="form-text text-muted">Imagens suportadas: JPEG, JPG, PNG, BMP, GIF, SVG e WEBP - Tamanho máximo da imagem é 2MB - Tamanho máximo de upload é 8MB.</small>
                 </div>
             </div>
         </div>

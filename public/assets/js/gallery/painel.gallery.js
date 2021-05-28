@@ -1,8 +1,8 @@
 var load_photo = false;
 
-var current_page;
 var last_page;
 var total_page;
+var current_page;
 
 var page = 1;
 var qt_result_pg = 50;
@@ -41,14 +41,14 @@ function doneTyping() {
 }
 
 function list_photos(page, qt, search = null) {
-    let auth = $('meta[name="auth"]').attr('content');
     $.ajax({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYyMjA0MDgxNCwiZXhwIjoxNjIyMDQ0NDE0LCJuYmYiOjE2MjIwNDA4MTQsImp0aSI6IlQ0dTdvbklkVVd5SHhjcnciLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.n7RhO3yRQkhpsx7qb4YHMgBi_0WL6jvxMW9kALH4iwg'
         },
         url,
         type:'GET',
-        data: {auth, page, qt, search},
+        data: {page, qt, search},
         dataType:'JSON',
         beforeSend: function() {
             if(current_page == undefined) {
@@ -58,9 +58,9 @@ function list_photos(page, qt, search = null) {
             }
         },
         success:function(response) {
+            total_page = response.total;
             last_page = response.last_page;
             current_page = response.current_page;
-            total_page = response.total;
             let data = Object.values(response.data);
             page = current_page;
             setInterval(() => {
@@ -72,7 +72,6 @@ function list_photos(page, qt, search = null) {
             }
 
             $('#content-load').remove();
-            $('.card-header ul').html('');
 
             if(parseInt(response.total) > 0) {
                 data.map(item => {
@@ -116,6 +115,8 @@ function list_photos(page, qt, search = null) {
                                 </div>
                                 <div class="modal-footer" style="justify-content: space-between;">
                                     <button onclick="delete_item(${item.id})" class="btn btn-danger" data-dismiss="modal" aria-label="Close">Deletar</button>
+                                    <input id="btn-copy-${item.id}" class="hidden" type="text" value="${asset}/${item.hash}">
+                                    <button class="btn btn-info btn-copy" data-id="${item.id}">Copiar Link</button>
                                     <a href="${asset}/${item.hash}" class="btn btn-success" download="${item.name}">Donwload</a>
                                     <button id="btn-${item.id}" onclick="edit_item(${item.id})" class="btn btn-primary">Salvar</button>
                                 </div>
@@ -123,7 +124,6 @@ function list_photos(page, qt, search = null) {
                         </div>
                     </div>
                     `;
-
                     if(search == null || search == '') {
                         $('#gallery-area').append(photo);
                     } else {
@@ -145,7 +145,20 @@ function list_photos(page, qt, search = null) {
 
             $('h1 span').addClass('badge bg-secondary').html(`${response.total}`);
 
-            let gallery_img = [...document.querySelectorAll('.img-area')];
+            $('.btn-copy').click(function(e) {
+                let id = $(this).attr('data-id');
+                let t = $(this).text();
+                $(`#btn-copy-${id}`).select();
+                document.execCommand('copy');
+
+                $(this).text('Copiado!');
+                setTimeout(() => {
+                    $(this).text(t);
+                }, 1000);
+                return;
+            });
+
+            /* let gallery_img = [...document.querySelectorAll('.img-area')];
             gallery_img.forEach(img => {
                 img.addEventListener('click', () => {
                     gallery_img.forEach(i => {
@@ -154,7 +167,7 @@ function list_photos(page, qt, search = null) {
                     let id = img.getAttribute('data-id');
                     img.classList.toggle('img-select');
                 });
-            });
+            });*/
         }
     })
 }
@@ -329,42 +342,51 @@ function add_photo() {
     let formData = new FormData(form);
     let request = new XMLHttpRequest();
 
-    request.addEventListener('loadstart', function(e) {
-
-    });
-    request.addEventListener('loadsend', function(e) {
-        console.log('terminou');
-    });
-
     request.upload.addEventListener('progress', function(e) {
-        console.log(e.total)
-        var percent = Math.round(e.loaded / e.total * 100);
+        if(e.total >= 8e+6) {
+            toastr["warning"]("O limite máximo de upload é 8MB", "Aviso");
+            request.abort();
+            return;
+        }
+        var percent = Math.round((e.loaded * 100) / e.total);
         $('.progress-bar')
-        .width(`${percent}%`)
-        .removeClass('bg-success')
-        .addClass('bg-primary')
-        .attr('aria-valuenow', percent)
-        .text(`${percent}% upload`);
+            .width(`${percent}%`)
+            .removeClass('bg-success progress-bar-striped progress-bar-animated')
+            .addClass('bg-primary')
+            .attr('aria-valuenow', percent)
+            .text(`${percent}% Upload concluido!`);
+
+        if(percent === 100) {
+            setTimeout(() => {
+                $('.progress-bar')
+                    .addClass('progress-bar-striped progress-bar-animated')
+                    .text(`Processando...`);
+            }, 1000);
+        }
     });
     request.addEventListener('load', function(e) {
-        $('.drop-zone__input').remove();
-        $('.drop-zone')
-            .append('<input type="file" name="photo[]" class="drop-zone__input" multiple>');
-        $('.drop-zone').html('<span class="drop-zone__prompt">Solte a imagem aqui ou clique para fazer o upload.</span>');
-            $('.progress-bar')
-            .width(`0%`)
-            .removeClass('bg-success')
-            .addClass('bg-primary')
-            .attr('aria-valuenow', 0)
-            .text('');
-            $('#gallery-area').html('');
         $('.progress-bar')
-            .removeClass('bg-primary')
+            .removeClass('bg-primary progress-bar-striped progress-bar-animated')
             .addClass('bg-success')
             .text('Completo!');
+
+        setTimeout(() => {
+            $('.drop-zone__thumb').remove();
+            $('.drop-zone')
+                .append('<span class="drop-zone__prompt">Solte a imagem aqui ou clique para fazer o upload.</span>');
+            $('.progress-bar')
+                .width(`0%`)
+                .removeClass('bg-success progress-bar-striped progress-bar-animated')
+                .addClass('bg-primary')
+                .attr('aria-valuenow', 0)
+                .text('');
+            $('#photo-add').trigger('reset');
+        }, 1000);
+
         if(request.status === 200) {
             let r = JSON.parse(request.response);
             if(r.success === true) {
+                $('#gallery-area').html('');
                 toastr["success"]("Foto salva com sucesso!", "Sucesso");
                 list_photos(page, qt_result_pg);
             } else {
