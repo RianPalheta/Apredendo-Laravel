@@ -69,7 +69,8 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th width="100%">Nome</th>
+                        <th width="80%">Nome</th>
+                        <th width="20%">Qt. de produtos</th>
                         <th>Ações</th>
                     </tr>
                 </thead>

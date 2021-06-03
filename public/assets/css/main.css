@@ -29,7 +29,7 @@
     overflow: hidden;
 
     border-radius: 10px;
-    border: 4px dashed #009578;
+    border: 4px dashed #007bff /* #009578 */;
 
 }
 .drop-zone--over {
@@ -93,16 +93,12 @@
     transition: .1s linear;
 }
 .img-select {
-    border: 5px solid #009578;
+    border: 5px solid #007bff /* #009578 */;
 }
 .img-checkbox {
     /* display: none; */
 }
-label {
-    width: 200px;
-}
 img {
-    display: block;
     object-fit: cover;
     max-height: 300px;
 }
@@ -117,7 +113,6 @@ img {
     text-overflow: ellipsis;
 
     width: 100%;
-    max-width: 200px;
     padding: 5px 10px;
 
     left: 0;
@@ -137,4 +132,67 @@ img {
 .hidden {
     position: absolute;
     left: 1000vw;
+}
+
+.required {
+    color: #dc3545;
+}
+
+[class*=icheck-]>label {
+    transition:.3s;
+}
+
+.modal-personal {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    opacity: 0;
+    visibility: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+
+    transition: .5s;
+
+    z-index: 9999;
+
+    pointer-events: none;
+
+    background-color: rgba(0, 0, 0, .75);
+}
+
+.modal-personal--active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: initial;
+}
+
+.modal-personal .card {
+    min-width: 50vw;
+    max-width: 80vw;
+    max-height: 80vh;
+}
+.modal-personal .card-body {
+    display: flex;
+    overflow-y: auto;
+    justify-content: center;
+}
+
+.modal-personal--close {
+    display: block;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.flex-1 {
+    flex: 1;
 }

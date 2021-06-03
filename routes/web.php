@@ -6,8 +6,11 @@ use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\BrandController as AdminBrandController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\OptionsController as AdminOptionsController;
 use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
+use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterController;
 
@@ -26,14 +29,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/auth/user', [ApiTokenController::class, 'update'])->name('auth.update');
+
 Route::prefix('painel')->group(function() {
     Route::get('/', [AdminHomeController::class, 'index'])->name('painel');
 
     Route::post('logout', [AdminLoginController::class, 'logout'])->name('logout');
 
     Route::get('login', [AdminLoginController::class, 'index'])->name('login');
+    Route::post('login', [AdminLoginController::class, 'authenticate'])->name('auth.login');
 
     Route::get('register', [AdminRegisterController::class, 'index'])->name('register');
+    Route::post('register', [AdminRegisterController::class, 'register'])->name('auth.register');
+
+    Route::get('products', [AdminProductController::class, 'index'])->name('products.list');
+    Route::get('products/add', [AdminProductController::class, 'create'])->name('products.create');
+    Route::get('products/{id}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
+
+    Route::get('options', [AdminOptionsController::class, 'index'])->name('options.list');
 
     Route::get('users', [AdminUserController::class, 'index'])->name('users.list');
     Route::get('users/add', [AdminUserController::class, 'create'])->name('users.create');
@@ -54,6 +67,9 @@ Route::prefix('painel')->group(function() {
     Route::get('gallery', [AdminGalleryController::class, 'index'])->name('gallery.list');
     Route::get('gallery/add', [AdminGalleryController::class, 'create'])->name('gallery.create');
     Route::get('gallery/{id}/edit', [AdminGalleryController::class, 'edit'])->name('gallery.edit');
+
+    Route::get('settings', [AdminSettingsController::class, 'index']);
+    Route::post('settings/update', [AdminSettingsController::class, 'update'])->name('settings.edit');
 });
 
 Route::fallback([SitePageController::class, 'index']);

@@ -3,74 +3,65 @@ var load_photo = false;
 var last_page;
 var total_page;
 var current_page;
+var current_photo;
 
 var page = 1;
 var qt_result_pg = 50;
 
 $(document).ready(function() {
+    // window.history.pushState("object or string", "Title", "/new-url"); -> Troca de URL
+
     list_photos(page, qt_result_pg);
+
+    let typingTimer; //timer identifier
+    let doneTypingInterval = 500; //time in ms, 1 second for example
+
+    $('#search').on('submit', function(e) {
+        e.preventDefault();
+    });
+
+    //on keyup, start the countdown
+    $('#search').keyup(function() {
+    clearTimeout(typingTimer);
+    if ($('#search').val) {
+        typingTimer = setTimeout(doneTyping, doneTypingInterval);
+    }
+    });
+
+    //user is "finished typing," do something
+    function doneTyping() {
+        let serach = $('#search input').val();
+        list_photos(1, localStorage.getItem('qt_result_pg_list_photos'), serach);
+    }
 
     window.addEventListener('scroll', _.debounce(loading_demand, 200));
 });
-
-$('select').on('change', function() {
-    let option = $('select').val();
-    localStorage.setItem('qt_result_pg_list_photos', option);
-    list_photos(1, option);
-});
-
-var typingTimer; //timer identifier
-var doneTypingInterval = 500; //time in ms, 1 second for example
-
-$('#search').on('submit', function(e) {
-    e.preventDefault();
-});
-
-//on keyup, start the countdown
-$('#search').keyup(function() {
-  clearTimeout(typingTimer);
-  if ($('#search').val) {
-    typingTimer = setTimeout(doneTyping, doneTypingInterval);
-  }
-});
-
-//user is "finished typing," do something
-function doneTyping() {
-    let serach = $('#search input').val();
-    list_photos(1, localStorage.getItem('qt_result_pg_list_photos'), serach);
-}
 
 function list_photos(page, qt, search = null) {
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYyMjA0MDgxNCwiZXhwIjoxNjIyMDQ0NDE0LCJuYmYiOjE2MjIwNDA4MTQsImp0aSI6IlQ0dTdvbklkVVd5SHhjcnciLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.n7RhO3yRQkhpsx7qb4YHMgBi_0WL6jvxMW9kALH4iwg'
         },
         url,
         type:'GET',
         data: {page, qt, search},
         dataType:'JSON',
         beforeSend: function() {
-            if(current_page == undefined) {
+            if(current_page == undefined || search !== null || search !== '') {
                 $('.content-load').append("<div id='content-load' class='position-absolute card d-flex justify-content-center align-items-center' style='z-index: 3; width:100%; height:100%; top:0; left:0;'><i class='fas fa-circle-notch rotafe-infinit' style='font-size:2.5rem'></i></div>");
             } else {
                 $('.card-body').append("<div id='content-load' class='card d-flex justify-content-center align-items-center' style='z-index: 3; width:100%; height:100%;'><i class='p-2 fas fa-circle-notch rotafe-infinit' style='font-size:2.5rem'></i></div>");
             }
         },
         success:function(response) {
+            page = current_page;
             total_page = response.total;
             last_page = response.last_page;
             current_page = response.current_page;
             let data = Object.values(response.data);
-            page = current_page;
-            setInterval(() => {
-                load_photo = false;
-            }, 1000);
-
-            if($('#gallery-area .alert')) {
-                $('#gallery-area .alert').remove();
-            }
-
+            setInterval(() => load_photo = false, 1000);
+            if($('#gallery-area .alert')) $('#gallery-area .alert').remove();
+            if(search !== null || search !== '') $('#gallery-area').html('');
             $('#content-load').remove();
 
             if(parseInt(response.total) > 0) {
@@ -92,7 +83,9 @@ function list_photos(page, qt, search = null) {
                             </div>
                                 <div class="modal-body row">
                                     <div class="col d-flex justify-content-center align-items-center" style="background-color:#ccc">
-                                        <img id="${item.name}" class="img-fluid lozad" data-src="${asset}/${item.hash}" alt="${item.name}">
+                                        <a title="Ver imagem em tamanho real" href="${asset}/${item.hash}" target="_blank">
+                                            <img id="${item.name}" class="img-fluid lozad" data-src="${asset}/${item.hash}" alt="${item.name}">
+                                        </a>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
@@ -124,12 +117,8 @@ function list_photos(page, qt, search = null) {
                         </div>
                     </div>
                     `;
-                    if(search == null || search == '') {
-                        $('#gallery-area').append(photo);
-                    } else {
-                        $('#gallery-area').html('');
-                        $('#gallery-area').append(photo);
-                    }
+
+                    $('#gallery-area').append(photo);
                 });
             } else {
                 $('#gallery-area').html("<div class='alert alert-light' role='alert'>Não há fotos para mostrar.</div>");
@@ -157,17 +146,6 @@ function list_photos(page, qt, search = null) {
                 }, 1000);
                 return;
             });
-
-            /* let gallery_img = [...document.querySelectorAll('.img-area')];
-            gallery_img.forEach(img => {
-                img.addEventListener('click', () => {
-                    gallery_img.forEach(i => {
-                        i.classList.remove('img-select');
-                    })
-                    let id = img.getAttribute('data-id');
-                    img.classList.toggle('img-select');
-                });
-            });*/
         }
     })
 }

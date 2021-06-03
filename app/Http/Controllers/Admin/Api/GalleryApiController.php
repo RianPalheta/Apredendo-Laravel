@@ -28,7 +28,7 @@ class GalleryApiController extends Controller
         for($i = 0; $i < count($photos); $i++) {
             $photo = $photos[$i];
             $validator = Validator::make($photos, [
-                $i => 'image|max:2243|dimensions:max_width=4000,max_height=3000'
+                $i => 'image|max:2000|dimensions:max_width=4000,max_height=3000'
             ]);
             if($validator->fails()) {
                 $create['success'] = false;
@@ -110,25 +110,25 @@ class GalleryApiController extends Controller
         return;
     }
 
-    private function encodeImg($n, $ext, $ql) {
+    private function encodeImg($n, $ext, $ql, $w = 300, $h = 300) {
+        $img_hash = md5(strtotime('now').rand(1000,9999)).'.'.$ext;
+
         $image = Image::make($n);
+
         if(in_array($image->mime(), ['image/jpg', 'image/jpeg', 'image/png', 'image/svg'])) {
             $image->encode($ext, $ql);
         } else {
             $ext = explode('/', $image->mime())[1];
         }
-        $img_hash = md5(strtotime('now').rand(1000,9999)).'.'.$ext;
+
+        if($image->width() > 1000 || $image->height() > 1000) $image->resize($w, $h);
+
         $image->save(public_path('media').'/gallery/'.$img_hash, $ql);
+
         $img['hash'] = $img_hash;
         $img['size'] = $image->filesize();
         $img['dimension'] = $image->width().' x '.$image->height();
-        return $img;
-    }
 
-    private function infoImage($n) {
-        $image = Image::make($n);
-        $img['size'] = $image->filesize();
-        $img['dimension'] = $image->width().' x '.$image->height();
         return $img;
     }
 }

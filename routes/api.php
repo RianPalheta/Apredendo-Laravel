@@ -3,14 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CorreiosController;
-use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
+use App\Http\Controllers\Admin\OptionsController as AdminOptionsController;
 use App\Http\Controllers\Admin\Api\PageApiController as AdminPageApiController;
 use App\Http\Controllers\Admin\Api\UserApiController as AdminUserApiController;
 use App\Http\Controllers\Admin\Api\BrandApiController as AdminBrandApiController;
-use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterController;
 use App\Http\Controllers\Admin\Api\GalleryApiController as AdminGalleryApiController;
 use App\Http\Controllers\Admin\Api\CategoryApiController as AdminCategoryApiController;
-
+use App\Http\Controllers\Admin\Api\ProductApiController as AdminProductApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,13 +26,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('login', [AdminLoginController::class, 'authenticate'])->name('auth.login');
-Route::post('register', [AdminRegisterController::class, 'register'])->name('auth.register');
-
 Route::prefix('painel')->group(function() {
+    Route::get('products/get', [AdminProductApiController::class, 'get_products'])->name('getProducts');
+    Route::put('products/update/{id}', [AdminProductApiController::class, 'update'])->name('products.update');
+    Route::post('products/create/user', [AdminProductApiController::class, 'store'])->name('products.add');
+    Route::delete('products/destroy/{id}', [AdminProductApiController::class, 'destroy'])->name('products.destroy');
+
+    Route::get('options/get', [AdminOptionsController::class, 'get_options'])->name('getOptions');
+    Route::put('options/update/{id}', [AdminOptionsController::class, 'update'])->name('options.update');
+    Route::post('options/create/user', [AdminOptionsController::class, 'store'])->name('options.add');
+    Route::delete('options/destroy/{id}', [AdminOptionsController ::class, 'destroy'])->name('options.destroy');
+
     Route::get('users/get', [AdminUserApiController::class, 'get_users'])->name('getUsers');
     Route::put('users/update/{id}', [AdminUserApiController::class, 'update'])->name('users.update');
-    Route::post('users/create/user', [AdminUserApiController::class, 'create_user'])->name('users.add');
+    Route::post('users/create/user', [AdminUserApiController::class, 'store'])->name('users.add');
     Route::delete('users/destroy/{id}', [AdminUserApiController::class, 'destroy'])->name('users.destroy');
 
     Route::get('pages/get', [AdminPageApiController::class, 'get_pages'])->name('getPages');

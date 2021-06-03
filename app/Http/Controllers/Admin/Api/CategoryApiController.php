@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin\Api;
 
+use App\Models\Product;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,14 +30,15 @@ class CategoryApiController extends Controller
         foreach($data as $item) {
             $item['subs'] = [];
             $pre[$item['id']] = $item;
+            $pre[$item['id']]['total_products'] = $this->total_products($item['id']);
         }
         while($this->stillNeed($pre)) {
             $this->organizeCategory($pre);
         }
+
         $array['data'] = $pre;
 
-        echo json_encode($array);
-        return;
+        return response()->json($array);
     }
 
     public function store(Request $request)
@@ -47,7 +49,7 @@ class CategoryApiController extends Controller
             'img'
         ]);
 
-            
+
         if( $request->hasFile('img') &&
             $request->file('img')->isValid()) {
             $data['img'] = $request->file('img');
@@ -93,7 +95,7 @@ class CategoryApiController extends Controller
     }
 
     public function update(Request $request, $id)
-    {   
+    {
         $cat = Categorie::find($id);
 
         if($cat) {
@@ -101,16 +103,16 @@ class CategoryApiController extends Controller
                 'name',
                 'sub'
             ]);
-    
+
             foreach ($inputs as $key => $item) {
                 !empty($inputs[$key]) ? $data[$key] = $item : '';
             }
-                
+
             if( $request->hasFile('img') &&
                 $request->file('img')->isValid()) {
                 $data['img'] = $request->file('img');
             }
-    
+
             $validator = Validator::make($data, [
                 // 'sub'   => 'string',
                 'img'   => 'image|max:5243',
@@ -122,7 +124,7 @@ class CategoryApiController extends Controller
             } else {
                 $update['success'] = true;
                 $update['message'] = '';
-    
+
                 if(!empty($data['img'])) {
                     if($data['img'] != $cat->img) {
                         $data['img'] = $this->encodeImg(
@@ -146,7 +148,7 @@ class CategoryApiController extends Controller
                 }
                 $cat->save();
             }
-    
+
             echo json_encode($update);
             return;
         }
@@ -157,11 +159,11 @@ class CategoryApiController extends Controller
         $categories = $this->scanCategory($id);
         if($this->hasProduct($categories) == false) {
             $this->deleteCategories($categories);
-            
+
             $delete['success'] = true;
             echo json_encode($delete);
             return;
-        } 
+        }
         $delete['success'] = false;
         $delete['message'] = 'Há produtos cadastrados nessa categoria.';
         echo json_encode($delete);
@@ -189,28 +191,28 @@ class CategoryApiController extends Controller
 
     private function scanCategory($id, $cats = []) {
         if(!in_array($id, $cats)) $cats[] = $id;
-        
+
         $category = Categorie::select('id')
         ->where('sub', $id)
         ->get();
         $category = json_encode($category);
         $data = json_decode($category, true);
-        
+
         if(count($data) > 0) {
             foreach($data as $item) {
                 if(!in_array($item['id'], $cats)) {
                     $cats[] = $item['id'];
                 }
-                
+
                 $cats = $this->scanCategory($item['id'], $cats);
             }
         }
-        
+
         return $cats;
     }
 
     private function hasProduct($array = []) {
-        
+
         $product = DB::select("SELECT COUNT(*) as c FROM products WHERE id_category IN (".implode(',', $array).")");
         $product = json_encode($product);
         $product = json_decode($product, true);
@@ -234,17 +236,34 @@ class CategoryApiController extends Controller
                     .'/categories/'
                     .$item['img']
                 );
+
             }
+            break;
+        }
+        foreach($array as $id) {
+            if($this->total_products($id) > 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => [
+                        'can_not' => 'Existem produtos cadastrados nessa categoria.'
+                    ]
+                ]);
+            }
+            break;
         }
 
         DB::delete("DELETE FROM categories WHERE id IN (".implode(',', $array).")");
     }
-    
+
     protected function encodeImg($n, $ext, $ql, $w = 300, $h = 300) {
         $image = Image::make($n)->encode($ext, $ql);
         $image->resize($w, $h);
         $img_name = md5(strtotime('now').rand(1000,9999)).'.'.$ext;
         $image->save(public_path('media').'/categories/'.$img_name);
         return $img_name;
+    }
+
+    private function total_products($id) {
+        return Product::select('id_category')->where('id_category', $id)->count();
     }
 }

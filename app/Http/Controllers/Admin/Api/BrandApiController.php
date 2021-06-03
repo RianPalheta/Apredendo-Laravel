@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,8 +19,12 @@ class BrandApiController extends Controller
             ->orderByDesc('id')
             ->paginate($qt);
 
-        echo json_encode($brands);
-        return;
+        foreach($brands as $key => $item) {
+            $t = $this->total_products($item['id']);
+            $brands[$key]['total_products'] = $t;
+        }
+
+        return response()->json($brands);
     }
 
     public function store(Request $request)
@@ -61,8 +66,7 @@ class BrandApiController extends Controller
             $brand->save();
         }
 
-        echo json_encode($create);
-        return;
+        return response()->json($create);
     }
 
     public function update(Request $request, $id)
@@ -123,19 +127,27 @@ class BrandApiController extends Controller
 
     public function destroy($id)
     {
-        $brand = Brand::find($id);
-        if($brand->img != 'default.png') {
-            @unlink(
-                public_path('media')
-                .'/brands/'
-                .$brand->img
-            );
+        if($this->total_products($id) > 0) {
+            $delete = [
+                'success' => false,
+                'message' => [
+                    'can_not' => 'Existem produtos cadastrados nessa marca.'
+                ]
+            ];
+        } else {
+            $brand = Brand::find($id);
+            if($brand->img != 'default.png') {
+                @unlink(
+                    public_path('media')
+                    .'/brands/'
+                    .$brand->img
+                );
+            }
+            $brand->delete();
+            $delete['success'] = true;
         }
-        $brand->delete();
-        $delete['success'] = true;
 
-        echo json_encode($delete);
-        return;
+        return response()->json($delete);
     }
 
     protected function encodeImg($n, $ext, $ql, $w = 300, $h = 300) {
@@ -144,5 +156,9 @@ class BrandApiController extends Controller
         $img_name = md5(strtotime('now').rand(1000,9999)).'.'.$ext;
         $image->save(public_path('media').'/brands/'.$img_name);
         return $img_name;
+    }
+
+    private function total_products($id) {
+        return Product::select('id_brand')->where('id_brand', $id)->count();
     }
 }

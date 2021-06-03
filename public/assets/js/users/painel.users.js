@@ -78,12 +78,12 @@ function list_users(page, qt, search = null) {
                     <tr>
                         <td>${i.name}</td>
                         <td>${i.email}</td>
-                        <td>${i.telephone}</td>
+                        <td>${i.telephone === null ? '(___) _____-____' : i.telephone}</td> <!-- (000) 00000-0000 -->
                         <td>${date_creat[2]}/${date_creat[1]}/${date_creat[0]}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
                                 <a title="Editar" href="${url_edit_user}" class="btn btn-sm btn-info"><i class="fas fa-user-edit"></i></a>
-                                <button onclick="delete_user(${i.id})" title="Deletar" class="btn btn-sm btn-danger ${i.id === logged ? 'disabled' : ''}"><i class="fas fa-trash"></i></button>
+                                <button onclick="delete_user(${i.id})" title="${i.id === logged ? 'Você não pode deletar o seu usuário' : 'Deletar'}" class="btn btn-sm btn-danger ${i.id === logged ? 'disabled' : ''}" ${i.id === logged ? 'disabled' : ''}><i class="fas fa-trash"></i></button>
                             </div>
                         </td>
                     </tr>

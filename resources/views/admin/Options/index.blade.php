@@ -1,29 +1,30 @@
 @extends('adminlte::page')
 
-@section('title', 'Categorias')
+@section('title', 'Opções')
 
 @section('content_header')
     <div class="d-flex justify-content-between">
-        <h1>Categorias <span></span></h1>
-        <a title="Adicionar uma nova marca" href="{{ route('categories.create') }}" class="btn btn-success"><i class="fas fa-plus"></i></a>
+        <h1>Lista de opções dos produtos <span></span></h1>
+        <button title="Adicionar uma nova opção" class="btn btn-success" data-toggle="modal" data-target="#add-option"><i class="fas fa-plus"></i></button>
     </div>
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/loading.css') }}">
 @endsection
 
 @section('js')
     <script>
-        const url = "{{ route('getCategories') }}";
-        const url_edit = "{{ route('categories.edit', [1]) }}";
-        const url_del = "{{ route('categories.destroy', [1]) }}";
-        const assets = "{{ asset('media/categories') }}";
+        const url = "{{ route('getOptions') }}";
+        const url_add = "{{ route('options.add') }}";
+        const url_edit = "{{ route('options.update', [1]) }}";
+        const url_del = "{{ route('options.destroy', [1]) }}";
     </script>
     <script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/toastr.min.js') }}"></script>
-    <script src="{{ asset('assets/js/categories/painel.categories.js') }}"></script>
+    <script src="{{ asset('assets/js/options/painel.options.js') }}"></script>
 @endsection
 
 @section('content')
@@ -56,7 +57,7 @@
 
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
+                            <i class="fas fa-search"></i>
                         </button>
                     </div>
                     </div>
@@ -68,11 +69,41 @@
             </div>
         </div>
         <div class="card-body">
+            <div class="modal fade" id="add-option" tabindex="-1" role="dialog" aria-labelledby="add-option-Title" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="add-option-LongTitle">Adicionar uma nova opção</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="form-add-option">
+                        <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="name">
+                                        <font style="vertical-align: inherit;">
+                                            <font style="vertical-align: inherit;">Nome</font>
+                                        </font>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" name="name" class="form-control" id="name" placeholder="Digite o nome da opção">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th width="80%">Nome</th>
-                        <th width="20%">Qt. de produtos</th>
+                        <th width="100%">Nome</th>
                         <th>Ações</th>
                     </tr>
                 </thead>

@@ -16,9 +16,6 @@ class UserApiController extends Controller
     public function get_users(Request $request) {
         $search['content'] = $request->input('search');
         switch($search['content']) {
-            case is_numeric($search['content']):
-                $search['type'] = 'id';
-            break;
             case filter_var($search['content'], FILTER_VALIDATE_EMAIL):
                 $search['type'] = 'email';
             break;
@@ -27,24 +24,19 @@ class UserApiController extends Controller
             break;
         }
 
-        // echo $search['type'].' '.$search['content'];
-
         $qt = intval($request->input('qt', 10));
         $users = User::where($search['type'], 'like', '%'.$search['content'].'%')
             ->orderByDesc('id')
             ->paginate($qt);
 
-        echo json_encode($users);
-        return;
+        return response()->json($users);
     }
 
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
 
-    public function create_user(Request $request)
-    {
+    public function store(Request $request) {
         $inputs = $request->only([
             'name',
             'email',
@@ -122,8 +114,7 @@ class UserApiController extends Controller
         return;
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $user = User::find($id);
         if(!$user) {
             $update['success'] = false;
@@ -208,18 +199,14 @@ class UserApiController extends Controller
                 : '';
             unset($data['password_confirmation']);
 
-            foreach($data as $key => $value) {
-                $user->$key = $value;
-            }
-            $user->save();
+            $user->update($data);
         }
 
         echo json_encode($update);
         return;
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $loggedId = intval(Auth::id());
 
         if($loggedId !== intval($id)) {
@@ -242,8 +229,7 @@ class UserApiController extends Controller
         return;
     }
 
-    protected function validator(array $data, $req = false)
-    {
+    protected function validator(array $data, $req = false) {
         return Validator::make($data, [
             'uf'            => 'min:2',
             'avatar'        => 'image|max:5243',
@@ -253,8 +239,8 @@ class UserApiController extends Controller
             'number_home'   => 'string|max:100',
             'road'          => 'string|max:100',
             'cep'           => 'string|min:8|max:10',
-            $req ? "'birthday' => 'required'" : '',
             'cpf'           => $req ? 'required|cpf_cnpj' : 'cpf_cnpj',
+            'birthday'      => $req ? 'required|min:8|max:10' : 'min:8|max:10',
             'telephone'     => $req ? 'required|string|max:16' : 'string|max:16',
             'name'          => $req ? 'required|string|max:100' : 'string|max:100',
             'password'      => $req ? 'required|string|min:4|max:100|confirmed' : 'string|min:4|max:100|confirmed',
@@ -265,8 +251,8 @@ class UserApiController extends Controller
     protected function avatar_user($n, $ext, $ql, $w = 300, $h = 300) {
         $image = Image::make($n)->encode($ext, $ql);
         $image->resize($w, $h);
-        $img_name = md5(strtotime('now').rand(1000,9999)).'.'.$ext;
-        $image->save(public_path('media').'/users/'.$img_name);
-        return $img_name;
+        $imgName = md5(strtotime('now').rand(1000,9999)).'.'.$ext;
+        $image->save(public_path('media').'/users/'.$imgName);
+        return $imgName;
     }
 }

@@ -11,6 +11,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/css/loading.css') }}">
+    <style>th,td{min-width: 150px;}.card-header,.card-body{overflow-x: auto;}table{min-width: 600px;}</style>
 @endsection
 
 @section('js')
@@ -70,10 +71,10 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th width="">Nome</th>
-                        <th width="">E-mail</th>
-                        <th width="">Telefone</th>
-                        <th width="">Data de cadastro</th>
+                        <th width="25%">Nome</th>
+                        <th width="25%">E-mail</th>
+                        <th width="20%">Telefone</th>
+                        <th width="20%">Data de cadastro</th>
                         <th width="10%">Ações</th>
                     </tr>
                 </thead>

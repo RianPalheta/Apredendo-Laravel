@@ -2,11 +2,11 @@ var qt_result_pg = 50;
 var page = 1;
 
 $(document).ready(function() {
-    if(localStorage.getItem('current_page_list_brands')) {
-        page = localStorage.getItem('current_page_list_brands');
+    if(localStorage.getItem('current_page_list_products')) {
+        page = localStorage.getItem('current_page_list_products');
     }
-    if(localStorage.getItem('qt_result_pg_list_brands')) {
-        qt_result_pg = localStorage.getItem('qt_result_pg_list_brands');
+    if(localStorage.getItem('qt_result_pg_list_products')) {
+        qt_result_pg = localStorage.getItem('qt_result_pg_list_products');
     }
 
     if($('table').length > 0) {
@@ -15,14 +15,14 @@ $(document).ready(function() {
                 item.setAttribute('selected','selected')
             }
         });
-        list_brands(page, qt_result_pg);
+        list_products(page, qt_result_pg);
     }
 });
 
 $('select').on('change', function() {
     let option = $('select').val();
-    localStorage.setItem('qt_result_pg_list_brands', option);
-    list_brands(1, option);
+    localStorage.setItem('qt_result_pg_list_products', option);
+    list_products(1, option);
 });
 
 var typingTimer; //timer identifier
@@ -43,11 +43,11 @@ $('#search').keyup(function() {
 //user is "finished typing," do something
 function doneTyping() {
     let serach = $('#search input').val();
-    list_brands(1, localStorage.getItem('qt_result_pg_list_brands'), serach);
+    list_products(1, localStorage.getItem('qt_result_pg_list_products'), serach);
 }
 
 
-function list_brands(page, qt, search = null) {
+function list_products(page, qt, search = null) {
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -63,7 +63,7 @@ function list_brands(page, qt, search = null) {
             let last_page = response.last_page;
             let current_page = response.current_page
             let data = response.data;
-            localStorage.setItem('current_page_list_brands', current_page);
+            localStorage.setItem('current_page_list_products', current_page);
 
             $('tbody').html('');
             $('#content-load').remove();
@@ -71,24 +71,32 @@ function list_brands(page, qt, search = null) {
 
             if(parseInt(response.total) > 0) {
                 data.map(i => {
-                    let url_edit_page = url_edit.replace('1', i.id);
+                    let url_edit_user = url_edit.replace('1', i.id);
                     let table = `
                     <tr>
-                        <td>${i.name}</td>
-                        <td>${i.total_products}</td>
+                        <td>${i.name_category}</td>
+                        <td>${i.name}</br><small>${i.name_brand}</small></td>
+                        <td>${i.stock}</td>
+                        <td>
+                            <small>
+                                <strike>
+                                    ${i.price_from.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
+                                </strike>
+                            </small>
+                            </br>
+                            ${i.price.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a title="Editar" href="${url_edit_page}" class="btn btn-sm btn-info"><i class="fas fa-pen-alt"></i></a>
-                                <button onclick="delete_user(${i.id})" title="${i.total_products > 0 ? 'Você não pode deletar marcas que estão sendo usadas' : 'Deletar'}" class="btn btn-sm btn-danger ${i.total_products > 0 ? 'disabled' : ''}" ${i.total_products > 0 ? 'disabled' : ''}><i class="fas fa-trash"></i></button>
+                                <a title="Editar" href="${url_edit_user}" class="btn btn-sm btn-info"><i class="fas fa-pen-alt"></i></a>
+                                <button onclick="delete_user(${i.id})" title="Deletar" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                             </div>
                         </td>
                     </tr>
                     `
                     $('tbody').append(table);
-                    return;
                 });
             } else {
-                $('table').html("<div class='alert alert-light' role='alert'>Não há marcas para mostrar.</div>");
+                $('table').html("<div class='alert alert-light' role='alert'>Não há usuários para mostrar.</div>");
                 return;
             }
 
@@ -129,7 +137,7 @@ function list_brands(page, qt, search = null) {
                     e.preventDefault();
                     let attr = item.getAttribute('href');
                     if(parseInt(current_page) != parseInt(attr)) {
-                        list_brands(attr, localStorage.getItem('qt_result_pg_list_brands'));
+                        list_products(attr, localStorage.getItem('qt_result_pg_list_products'));
                     }
                 })
             });
@@ -144,7 +152,9 @@ function list_brands(page, qt, search = null) {
 }
 
 function delete_user(id) {
-    let url_del_page = url_del.replace('1', id);
+    if(id === logged) return;
+
+    let url_del_user = url_del.replace('1', id);
     let c = confirm('Tem certeza que você quer excluir esse usuário?');
     if(c) {
         $.ajax({
@@ -152,14 +162,15 @@ function delete_user(id) {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             type: "DELETE",
-            url: url_del_page,
-            success: function (r) {
+            url: url_del_user,
+            success: function (response) {
+                let r = JSON.parse(response);
                 if(r.success === false) {
-                    return;
+                    return alert(r.msg);
                 }
-                list_brands(
-                    localStorage.getItem('current_page_list_brands'),
-                    localStorage.getItem('qt_result_pg_list_brands')
+                list_products(
+                    localStorage.getItem('current_page_list_products'),
+                    localStorage.getItem('qt_result_pg_list_products')
                 );
             }
         });

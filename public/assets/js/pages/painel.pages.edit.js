@@ -1,9 +1,8 @@
 tinymce.init({
     selector:'textarea.body-field',
-    height:300,
     menubar:true,
-    plugins:['link', 'table', 'image', 'autoresize', 'lists', 'advlist', 'anchor', 'charmap', 'autosave', 'codesample', 'code', 'directionality', 'emoticons', 'insertdatetime', 'searchreplace', 'wordcount', 'media'],
-    toolbar:'undo redo | formatselect | bold italic underline  backcolor | alignleft aligncenter alignright alignjustify ltr rtl | link image imagetools emoticons | bullist numlist arrowlist | lists advlist | codesample code',
+    plugins:['link', 'table', 'image', 'imagetools', 'autoresize', 'lists', 'advlist', 'anchor', 'charmap', 'autosave', 'codesample', 'code', 'directionality', 'emoticons', 'insertdatetime', 'searchreplace', 'wordcount', 'media'],
+    toolbar:'undo redo | formatselect | bold italic underline  backcolor | alignleft aligncenter alignright alignjustify ltr rtl | link image media emoticons | bullist numlist arrowlist | lists advlist | codesample code',
     autosave_ask_before_unload: true,
     insertdatetime_formats: ['%H:%M:%S', '%Y-%m-%d', '%I:%M:%S %p', '%D'],
     images_upload_url,

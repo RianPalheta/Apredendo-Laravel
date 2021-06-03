@@ -65,8 +65,8 @@ return [
     */
 
     'usermenu_enabled' => true,
-    'usermenu_header' => false,
-    'usermenu_header_class' => 'bg-primary',
+    'usermenu_header' => true,
+    'usermenu_header_class' => 'bg-gradient-primary',
     'usermenu_image' => true,
     'usermenu_desc' => false,
     'usermenu_profile_url' => false,
@@ -230,42 +230,29 @@ return [
             'icon' => 'fas fa-tachometer-alt',
         ],
         [
-            'text'      => 'Produtos',
-            'icon'      => 'fab fa-product-hunt',
-            'submenu'   => [
-                [
-                    'text' => 'Marcas',
-                    'url'  => 'painel/brands',
-                    'icon' => 'fas fa-ticket-alt',
-                ],
-                [
-                    'text' => 'Categorias',
-                    'url'  => 'painel/categories',
-                    'icon' => 'fas fa-boxes',
-                ],
-            ],
+            'text' => 'Marcas',
+            'url'  => 'painel/brands',
+            'icon' => 'fas fa-ticket-alt',
         ],
         [
-            'text'      => 'Clientes',
-            'icon'      => 'fas fa-users',
-            'submenu'   => [
-                [
-                    'text' => 'Usuários',
-                    'url'  => 'painel/users',
-                    'icon' => 'fas fa-user-friends',
-                ],
-            ],
+            'text' => 'Categorias',
+            'url'  => 'painel/categories',
+            'icon' => 'fas fa-boxes',
         ],
         [
-            'text'      => 'Conteúdo',
-            'icon'      => 'fas fa-file-signature',
-            'submenu'   => [
-                [
-                    'text' => 'Páginas',
-                    'url'  => 'painel/pages',
-                    'icon' => 'far fa-sticky-note',
-                ],
-            ],
+            'text' => 'Produtos',
+            'url'  => 'painel/products',
+            'icon' => 'fas fa-shopping-cart',
+        ],
+        [
+            'text' => 'Usuários',
+            'url'  => 'painel/users',
+            'icon' => 'fas fa-user-friends',
+        ],
+        [
+            'text' => 'Páginas',
+            'url'  => 'painel/pages',
+            'icon' => 'far fa-sticky-note',
         ],
         ['header' => 'Configurações do Sistema'],
         [

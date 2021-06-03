@@ -145,10 +145,11 @@ function organizeCategory(array = [], url, level) {
         let table = `
         <tr>
             <td>${ isEmpty(level_cat) ? level_cat + i.name : i.name}</td>
+            <td>${i.total_products}</td>
             <td>
                 <div class="btn-group btn-group-sm">
-                    <a title="Editar" href="${url_edit}" class="btn btn-sm btn-info"><i class="fas fa-user-edit"></i></a>
-                    <button onclick="delete_item(${i.id})" title="Deletar" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                    <a title="Editar" href="${url_edit}" class="btn btn-sm btn-info"><i class="fas fa-pen-alt"></i></a>
+                    <button onclick="delete_item(${i.id})" title="${i.total_products > 0 ? 'Você não pode deletar categorias que estão sendo usadas' : 'Deletar'}" class="btn btn-sm btn-danger ${i.total_products > 0 ? 'disabled' : ''}" ${i.total_products > 0 ? 'disabled' : ''}><i class="fas fa-trash"></i></button>
                 </div>
             </td>
         </tr>

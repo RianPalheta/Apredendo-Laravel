@@ -10,7 +10,6 @@
 @stop
 
 @section('css')
-    <meta name="auth" content="{{ Auth::id() }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/progressive-image.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/loading.css') }}">
@@ -67,16 +66,16 @@
 
     <div class="card">
         <div class="card-header clearfix d-flex justify-content-between align-items-center">
-            <div class="card-tools">
+            <div class="card-tools" style="flex:1">
                 <form id="search">
-                    <div class="input-group input-group-sm" style="flex:1;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Procurar">
+                    <div class="input-group input-group-sm">
+                        <input type="text" name="table_search" class="form-control float-right" placeholder="Procurar foto...">
 
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                        </button>
-                    </div>
+                        {{-- <div class="input-group-append">
+                            <button type="submit" class="btn btn-default">
+                            <i class="fas fa-search"></i>
+                            </button>
+                        </div> --}}
                     </div>
                 </form>
             </div>
