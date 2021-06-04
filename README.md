@@ -6,4 +6,4 @@ Estou trabalhando nesse projeto, baseado no módulo da "Projeto - Loja
 
 ## Extensões do PHP
 
-- **[imagick](https://www.imagick.com.br/)**
+- **[imagick](https://www.php.net/manual/pt_BR/book.imagick.php)**
