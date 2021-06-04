@@ -27,13 +27,29 @@ class OptionsController extends Controller
         $qt = intval($request->input('qt', 10));
         $options = Option::where('name', 'like', '%'.$search['content'].'%')
             ->orderByDesc('id')
-            ->paginate($qt);
-        if(!$view)
-            return response()->json($options);
-        else
-            return view('admin.options.select', [
-                'options' => $options
-            ]);
+            ->paginate($qt)
+            ->toArray();
+
+        switch($view){
+            case $view == false:
+                return response()->json($options);
+            break;
+            case $view == 'select':
+                // echo "<pre>";
+                // print_r($options);
+                // exit;
+                return view('admin.options.select', [
+                    'options' => $options
+                ]);
+            break;
+            case $view == 'table':
+                return view('admin.options.table', [
+                    'options' => $options,
+                ]);
+                unset($options);
+            break;
+        }
+        return null;
     }
 
     /**
@@ -128,19 +144,28 @@ class OptionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        if($this->total_products($id) > 0) {
+        $data = $request->input('arrayId');
+        if($data) {
+            foreach($data as $id) {
+                if($this->total_products($id) > 0) {
+                    $delete = [
+                        'success' => false,
+                        'message' => 'Existem produtos cadastrados com essa variação.'
+                    ];
+                } else {
+                    $delete['success'] = true;
+                    $option = Option::find($id);
+                    if($option) $option->delete();
+                }
+            }
+        } else {
             $delete = [
                 'success' => false,
-                'message' => 'Existem produtos cadastrados com essa opção.'
+                'message' => 'Nenhum item enviado.'
             ];
-        } else {
-            $delete['success'] = true;
-            $brand = Option::find($id);
-            $brand->delete();
         }
-
         return response()->json($delete);
     }
 

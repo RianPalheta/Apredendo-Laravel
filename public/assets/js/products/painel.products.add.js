@@ -196,7 +196,7 @@ function list_options(page, qt) {
         },
         url: get_options,
         type:'GET',
-        data: {page, qt, view:true},
+        data: {page, qt, view:'select'},
         beforeSend: function() {
             $('.select-options').append("<div id='content-load' class='card d-flex justify-content-center align-items-center p-3' style='width:100%; height:100%;'><i class='fas fa-circle-notch rotafe-infinit'></i></div>");
         },

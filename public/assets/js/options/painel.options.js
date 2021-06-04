@@ -1,5 +1,5 @@
-var qt_result_pg = 50;
-var page = 1;
+let page = 1;
+let qt_result_pg = 50;
 
 toastr.options = {
     "closeButton": true,
@@ -27,7 +27,7 @@ $(document).ready(function() {
         qt_result_pg = localStorage.getItem('qt_result_pg_list_options');
     }
 
-    if($('table').length > 0) {
+    if($('.card').length > 0) {
         [...$('select').children()].forEach(item => {
             if(item.getAttribute('value') === qt_result_pg) {
                 item.setAttribute('selected','selected')
@@ -35,27 +35,26 @@ $(document).ready(function() {
         });
         list_options(page, qt_result_pg);
     }
-});
 
-$('select').on('change', function() {
-    let option = $('select').val();
-    localStorage.setItem('qt_result_pg_list_options', option);
-    list_options(1, option);
-});
+    $('select').on('change', function() {
+        let option = $('select').val();
+        localStorage.setItem('qt_result_pg_list_options', option);
+        list_options(1, option);
+    });
 
-var typingTimer; //timer identifier
-var doneTypingInterval = 500; //time in ms, 1 second for example
+    let typingTimer; //timer identifier
+    let doneTypingInterval = 500; //time in ms, 1 second for example
+    $('#search').on('submit', function(e) {
+        e.preventDefault();
+    });
 
-$('#search').on('submit', function(e) {
-    e.preventDefault();
-});
-
-//on keyup, start the countdown
-$('#search').keyup(function() {
-  clearTimeout(typingTimer);
-  if ($('#search').val) {
-    typingTimer = setTimeout(doneTyping, doneTypingInterval);
-  }
+    //on keyup, start the countdown
+    $('#search').keyup(function() {
+        clearTimeout(typingTimer);
+        if ($('#search').val) {
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        }
+    });
 });
 
 //user is "finished typing," do something
@@ -71,80 +70,39 @@ function list_options(page, qt, search = null) {
         },
         url,
         type:'GET',
-        data: {page, qt, search},
-        dataType:'JSON',
+        data: {page, qt, search, view:'table'},
         beforeSend: function() {
-            $('.content-load').append("<div id='content-load' class='position-absolute card d-flex justify-content-center align-items-center' style='z-index: 3; width:100%; height:100%; top:0; left:0;'><i class='fas fa-circle-notch rotafe-infinit' style='font-size:2.5rem'></i></div>");
+            $('.card').append("<div id='content-load' class='position-absolute card d-flex justify-content-center align-items-center' style='z-index:3; width:100%; height:100%; top:0; left:0;'><i class='fas fa-circle-notch rotafe-infinit' style='font-size:2.5rem'></i></div>");
         },
-        success:function(response) {
-            let last_page = response.last_page;
-            let current_page = response.current_page
-            let data = response.data;
-            localStorage.setItem('current_page_list_options', current_page);
-
-            $('tbody').html('');
+        success: function(response) {
+            $('.alert').remove();
+            $('.card-body').remove();
             $('#content-load').remove();
-            $('.card-header ul').html('');
+            $('.card-header ul').remove();
 
-            if(parseInt(response.total) > 0) {
-                data.map(i => {
-                    let url_edit_page = url_edit.replace('1', i.id);
-                    let table = `
-                    <tr>
-                        <td>${i.name}</td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <button title="Editar" class="btn btn-sm btn-info" data-toggle="modal" data-target="#${i.id}"><i class="fas fa-pen-alt"></i></button>
-                                <button onclick="delete_option(${i.id})" title="Deletar" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    `;
-                    let modal = `
-                    <div class="modal fade" id="${i.id}" tabindex="-1" role="dialog" aria-labelledby="${i.id}-Label" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="${i.id}-Label">Editar Opção</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="name-${i.id}">
-                                        <font style="vertical-align: inherit;">
-                                            <font style="vertical-align: inherit;">Nome</font>
-                                        </font>
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="text" name="name" class="form-control" id="name-${i.id}" value="${i.name}" placeholder="Digite o nome da opção">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                <button onclick="edit_option(${i.id})" type="button" id="#btn-${i.id}" class="btn btn-primary">Salvar</button>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    `;
-                    $('.card-body').append(modal);
-                    $('tbody').append(table);
-                    return;
-                });
-            } else {
-                $('table').html("<div class='alert alert-light' role='alert'>Não há marcas para mostrar.</div>");
-                return;
+            $('.card').append(response);
+
+            let checkDell = [];
+            let total = parseInt($('input[name="total"]').val());
+            let last_page = parseInt($('input[name="last_page"]').val());
+            let current_page = parseInt($('input[name="current_page"]').val());
+
+            if(total <= 0 && search == null) {
+                $('.card-body').remove();
+                $('.card').append("<div class='alert alert-info mt-3 mx-3 text-center' role='alert'><i class='fas fa-info-circle'></i> Não há opções para mostrar.</div>");
+            }
+            if(total <= 0 && search != null) {
+                $('.card-body').remove();
+                $('.card').append("<div class='alert alert-info mt-3 mx-3 text-center' role='alert'><i class='fas fa-info-circle'></i> Nenhuma opção correspondeu ao seu critério de pesquisa. Por favor, tente novamente.</div>");
             }
 
             const max_links = 2;
             if(last_page > 1) {
+                $('.card-header').append('<ul class="pagination pagination-sm m-0 float-right flex-1"></ul>');
                 $('.card-header ul').append(`
-                <li class="page-item ${current_page === 1 ? 'disabled' : ''}"><a class="page-link" href="1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">«</font></font></a></li>
+                    <li class="page-item ${current_page === 1 ? 'disabled' : ''}"><a class="page-link" ${current_page === 1 ? 'disabled' : ''} href="1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">«</font></font></a></li>
                 `)
-                for(let page_ant = current_page - max_links; page_ant <= current_page -1; page_ant++) {
+                for(let page_ant = current_page - max_links; page_ant <= current_page - 1; page_ant++) {
                     if(page_ant >= 1) {
                         $('.card-header ul').append(`
                             <li class="page-item"><a class="page-link" href="${page_ant}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">${page_ant}</font></font></a></li>
@@ -168,7 +126,7 @@ function list_options(page, qt, search = null) {
 
             $('#info-pages').html(`Mostrando ${current_page} de ${last_page} páginas`);
             $('h1 span').addClass('badge bg-secondary');
-            $('h1 span').html(`${response.total}`);
+            $('h1 span').html(`${total}`);
 
             const page_link = [...$('.page-link')];
             page_link.forEach(item => {
@@ -186,6 +144,31 @@ function list_options(page, qt, search = null) {
                 let id = btn.getAttribute('data-delete');
                 btn.onclick = delete_option(id);
             });
+
+
+            let checkboxes = document.querySelectorAll('input[type="checkbox"].option-check');
+            if(total != 0)
+            document.getElementById('select-all').addEventListener('change', function(e) {
+                checkboxes.forEach(c => {
+                    c.checked = this.checked;
+                    c.addEventListener('change', () => this.checked = false);
+                });
+            });
+
+            $(document).keyup(e => {
+                if(e.key == 'Delete') {
+                    checkDell = [];
+                    checkboxes.forEach(c => {
+                        if(c.checked) {
+                            checkDell.push(c.id);
+                        }
+                    })
+                    console.log(checkDell);
+                    return delete_option(checkDell);
+                }
+            });
+
+            localStorage.setItem('current_page_list_options', current_page);
         }
     })
 }
@@ -256,16 +239,23 @@ function edit_option(id) {
     });
 }
 
-function delete_option(id) {
-    let url_del_page = url_del.replace('1', id);
-    let c = confirm('Tem certeza que você quer excluir esse usuário?');
+function delete_option(arrayId = []) {
+    if(arrayId.length <= 0) {
+        return alert('Nenhuma item foi selecionado.');
+    };
+    if(arrayId.length == 1)
+        var c = confirm('Tem certeza que você quer excluir essa variação?');
+    else
+        var c = confirm('Tem certeza que você quer excluir essas variações?');
+
     if(c) {
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             type: "DELETE",
-            url: url_del_page,
+            data: {arrayId},
+            url: url_del,
             success: function (r) {
                 if(r.success === false) {
                     return toastr["error"](r.message, "Error");
@@ -276,5 +266,6 @@ function delete_option(id) {
                 );
             }
         });
+        return;
     }
 }

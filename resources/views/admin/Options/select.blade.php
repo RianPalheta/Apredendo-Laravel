@@ -1,14 +1,9 @@
-{{-- <header>
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/bootstrap.min.css') }}">
-</header> --}}
-
 <div class="flex-1 mr-3">
     <label for="select-options">Selecione as opções do produto:</label>
     <select id="select-options" class="form-control">
-        @foreach ($options as $option)
-            <option data-optionId="{{ $option->id }}" data-optionSlug="{{ $option->slug }}" value="{{ $option->id }}">
-                {{ $option->name }}
+        @foreach ($options['data'] as $option)
+            <option data-optionId="{{ $option['id'] }}" data-optionSlug="{{ $option['slug'] }}" value="{{ $option['id'] }}">
+                {{ $option['name'] }}
             </option>
         @endforeach
     </select>

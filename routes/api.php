@@ -35,7 +35,7 @@ Route::prefix('painel')->group(function() {
     Route::get('options/get', [AdminOptionsController::class, 'get_options'])->name('getOptions');
     Route::put('options/update/{id}', [AdminOptionsController::class, 'update'])->name('options.update');
     Route::post('options/create/user', [AdminOptionsController::class, 'store'])->name('options.add');
-    Route::delete('options/destroy/{id}', [AdminOptionsController ::class, 'destroy'])->name('options.destroy');
+    Route::delete('options/destroy', [AdminOptionsController ::class, 'destroy'])->name('options.destroy');
 
     Route::get('users/get', [AdminUserApiController::class, 'get_users'])->name('getUsers');
     Route::put('users/update/{id}', [AdminUserApiController::class, 'update'])->name('users.update');

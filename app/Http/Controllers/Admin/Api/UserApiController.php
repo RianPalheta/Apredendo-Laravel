@@ -46,6 +46,7 @@ class UserApiController extends Controller
             'cep',
             'cpf',
             'city',
+            'road',
             'district',
             'password',
             'complement',

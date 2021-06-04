@@ -58,7 +58,7 @@
                             </div>
                         </div>
                     </form>
-                    <small class="form-text text-muted">Imagens suportadas: JPEG, JPG, PNG, BMP, GIF, SVG e WEBP - Tamanho máximo da imagem é 2MB - Tamanho máximo de upload é 8MB.</small>
+                    <small class="form-text text-muted">Imagens suportadas: JPEG, JPG, PNG, BMP, GIF, SVG e WEBP - Tamanho máximo da imagem é 2MB - Tamanho máximo por upload é 8MB.</small>
                 </div>
             </div>
         </div>
@@ -70,12 +70,6 @@
                 <form id="search">
                     <div class="input-group input-group-sm">
                         <input type="text" name="table_search" class="form-control float-right" placeholder="Procurar foto...">
-
-                        {{-- <div class="input-group-append">
-                            <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
-                            </button>
-                        </div> --}}
                     </div>
                 </form>
             </div>
